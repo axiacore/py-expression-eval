@@ -177,7 +177,7 @@ class Expression():
         return nstack[0]
 
     def variables(self):
-        vars = [];
+        vars = []
         for i in range(0, len(self.tokens)):
             item = self.tokens[i]
             if item.type_ == TVAR and not item.index_ in vars:
@@ -329,7 +329,7 @@ class Parser:
             return nstack[0]
 
         def variables(self):
-            vars = [];
+            vars = []
             for i in range(0, len(self.tokens)):
                 item = self.tokens[i]
                 if item.type_ == TVAR and not item.index_ in vars:
@@ -527,7 +527,7 @@ class Parser:
             elif self.isComma():
                 if (expected & self.COMMA) == 0:
                     self.error_parsing(self.pos, 'unexpected \",\"')
-                self.addfunc(tokenstack, operstack, TOP2);
+                self.addfunc(tokenstack, operstack, TOP2)
                 noperators += 2
                 expected = \
                     self.PRIMARY | self.LPAREN | self.FUNCTION | self.SIGN
@@ -583,7 +583,12 @@ class Parser:
         raise Exception(self.errormsg)
 
     def addfunc(self, tokenstack, operstack, type_):
-        operator = Token(type_, self.tokenindex, self.tokenprio + self.tmpprio, 0);
+        operator = Token(
+            type_,
+            self.tokenindex,
+            self.tokenprio + self.tmpprio,
+            0,
+        )
         while len(operstack) > 0:
             if operator.prio_ <= operstack[len(operstack) - 1].prio_:
                 tokenstack.append(operstack.pop())
@@ -614,28 +619,28 @@ class Parser:
 
             if escaping:
                 if c == "'":
-                    buffer.append("'");
+                    buffer.append("'")
                     break
                 elif c == '\\':
-                    buffer.append('\\');
+                    buffer.append('\\')
                     break
                 elif c == '/':
-                    buffer.append('/');
+                    buffer.append('/')
                     break
                 elif c == 'b':
-                    buffer.append('\b');
+                    buffer.append('\b')
                     break
                 elif c == 'f':
-                    buffer.append('\f');
+                    buffer.append('\f')
                     break
                 elif c == 'n':
-                    buffer.append('\n');
+                    buffer.append('\n')
                     break
                 elif c == 'r':
-                    buffer.append('\r');
+                    buffer.append('\r')
                     break
                 elif c == 't':
-                    buffer.append('\t');
+                    buffer.append('\t')
                     break
                 elif c == 'u':
                     # interpret the following 4 characters
@@ -734,7 +739,7 @@ class Parser:
         code = self.expression[self.pos]
         if code is '(':
             self.pos += 1
-            self.tmpprio += 10;
+            self.tmpprio += 10
             return True
         return False
 
@@ -779,10 +784,10 @@ class Parser:
             if c.upper() == c.lower():
                 if i == self.pos or (c != '_' and (c < '0' or c > '9')):
                     break
-            str += c;
+            str += c
         if len(str) > 0 and (str in self.ops2):
-            self.tokenindex = str;
-            self.tokenprio = 5;
+            self.tokenindex = str
+            self.tokenprio = 5
             self.pos += len(str)
             return True
         return False
