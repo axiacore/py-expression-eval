@@ -1,0 +1,9 @@
+# File types
+*.pyc
+*.swo
+*.swp
+*.swn
+*.log
+
+# Configuration files
+.idea
