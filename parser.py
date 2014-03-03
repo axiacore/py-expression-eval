@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: AxiaCore S.A.S. http://axiacore.com
 #
-# Based on ndef.parser, by Matthew Crumley (js-expression-eval)
+# Based on js-expression-eval, by Matthew Crumley (email@matthewcrumley.com, http://silentmatt.com/)
 # https://github.com/silentmatt/js-expression-eval
 #
 # Ported to Python and modified by Vera Mazhuga (ctrl-alt-delete@live.com, http://vero4ka.info/)
