@@ -610,7 +610,7 @@ class Parser:
         str = ''
         while self.pos < len(self.expression):
             code = self.expression[self.pos]
-            if (code >= '0' and code <= '9') or code is '.':
+            if (code >= '0' and code <= '9') or code == '.':
                 str += self.expression[self.pos]
                 self.pos += 1
                 self.tokennumber = float(str)
@@ -702,29 +702,29 @@ class Parser:
 
     def isOperator(self):
         code = self.expression[self.pos]
-        if code is '+':
+        if code == '+':
             self.tokenprio = 0
             self.tokenindex = '+'
-        elif code is '-':
+        elif code == '-':
             self.tokenprio = 0
             self.tokenindex = '-'
-        elif code is '|':
-            if self.expression[self.pos] is '|':
+        elif code == '|':
+            if self.expression[self.pos] == '|':
                 self.pos += 1
                 self.tokenprio = 0
                 self.tokenindex = '||'
             else:
                 return False
-        elif code is '*':
+        elif code == '*':
             self.tokenprio = 1
             self.tokenindex = '*'
-        elif code is '/':
+        elif code == '/':
             self.tokenprio = 2
             self.tokenindex = '/'
-        elif code is '%':
+        elif code == '%':
             self.tokenprio = 2
             self.tokenindex = '%'
-        elif code is '^':
+        elif code == '^':
             self.tokenprio = 3
             self.tokenindex = '^'
         else:
@@ -734,19 +734,19 @@ class Parser:
 
     def isSign(self):
         code = self.expression[self.pos - 1]
-        return (code is '+') or (code is '-')
+        return (code == '+') or (code == '-')
 
     def isPositiveSign(self):
         code = self.expression[self.pos - 1]
-        return code is '+'
+        return code == '+'
 
     def isNegativeSign(self):
         code = self.expression[self.pos - 1]
-        return code is '-'
+        return code == '-'
 
     def isLeftParenth(self):
         code = self.expression[self.pos]
-        if code is '(':
+        if code == '(':
             self.pos += 1
             self.tmpprio += 10
             return True
@@ -754,7 +754,7 @@ class Parser:
 
     def isRightParenth(self):
         code = self.expression[self.pos]
-        if code is ')':
+        if code == ')':
             self.pos += 1
             self.tmpprio -= 10
             return True
@@ -762,7 +762,7 @@ class Parser:
 
     def isComma(self):
         code = self.expression[self.pos]
-        return code is ','
+        return code == ','
 
     def isWhite(self):
         code = self.expression[self.pos]
@@ -818,7 +818,7 @@ class Parser:
 
     def isComment(self):
         code = self.expression[self.pos - 1]
-        if code is '/' and self.expression[self.pos] is '*':
+        if code == '/' and self.expression[self.pos] == '*':
             self.pos = self.expression.index('*/', self.pos) + 2
             if self.pos == 1:
                 self.pos = len(self.expression)
