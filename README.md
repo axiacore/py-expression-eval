@@ -82,4 +82,6 @@ Available operations
     
     parser.parse('log(E)').evaluate({})  # 1.0
     parser.parse('cos(PI)').evaluate({})  # -1.0
+    
+    parser.parse('x||y').evaluate({'x': 2, 'y': 3})  # '23'
 
