@@ -32,6 +32,7 @@ Examples
     parser.parse('-3^x').evaluate({'x': 4})  # -81
     parser.parse('(-3)^x').evaluate({'x': 4})  # 81
     parser.parse('2*x + y').evaluate({'x': 4, 'y': 1})  # 9
+    parser.parse('round(log(2.7))').evaluate({}) # 1
     
     # substitute
     expr = parser.parse('2 * x + 1')
@@ -61,6 +62,10 @@ Available operations
     parser.parse('-2').evaluate({})  # -2.0
     parser.parse('abs(-2)').evaluate({}) # 2.0
     
+    parser.parse('ceil(1.4)').evaluate({})  # 2.0
+    parser.parse('floor(1.4)').evaluate({})  # 1.0
+    parser.parse('round(1.4)').evaluate({})  # 1.0
+    
     parser.parse('2^3').evaluate({})  # 8.0
     parser.parse('sqrt(16)').evaluate({}) # 4.0
     
@@ -72,4 +77,9 @@ Available operations
     parser.parse('acos(1)').evaluate({})  # 0.0
     parser.parse('atan(1)').evaluate({})  # 0.7853981633974483
     
-    parser.parse('log(1)').evaluate({})  # 0.0
+    parser.parse('log(2.7)').evaluate({})  # 0.9932517730102834
+    parser.parse('exp(1)').evaluate({})  # 2.718281828459045
+    
+    parser.parse('log(E)').evaluate({})  # 1.0
+    parser.parse('cos(PI)').evaluate({})  # -1.0
+
