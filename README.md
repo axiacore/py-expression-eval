@@ -47,3 +47,15 @@ Examples
     expr = parser.parse('x * (y * atan(1))')
     expr.variables()  # ['x', 'y']
     expr.simplify({'y': 4}).variables()  # ['x']
+
+
+Available operations
+--------------------
+
+    parser = Parser()
+    parser.parse('2 + 3').evaluate({})  # 5.0
+    parser.parse('2 - 3').evaluate({})  # -1.0
+    parser.parse('2 * 3').evaluate({})  # 6.0
+    parser.parse('2 / 3').evaluate({})  # 0.6666666666666666
+    parser.parse('2 % 3').evaluate({})  # 2.0
+    parser.parse('-2').evaluate({})  #-2.0
