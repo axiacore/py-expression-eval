@@ -371,7 +371,7 @@ class Parser:
         return a % b
 
     def concat(self, a, b):
-        return '' + a + b
+        return u'{0}{1}'.format(a, b)
 
     def neg(self, a):
         return -a
