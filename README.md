@@ -58,4 +58,18 @@ Available operations
     parser.parse('2 * 3').evaluate({})  # 6.0
     parser.parse('2 / 3').evaluate({})  # 0.6666666666666666
     parser.parse('2 % 3').evaluate({})  # 2.0
-    parser.parse('-2').evaluate({})  #-2.0
+    parser.parse('-2').evaluate({})  # -2.0
+    parser.parse('abs(-2)').evaluate({}) # 2.0
+    
+    parser.parse('2^3').evaluate({})  # 8.0
+    parser.parse('sqrt(16)').evaluate({}) # 4.0
+    
+    parser.parse('sin(3.14)').evaluate({})  # 0.0015926529164868282
+    parser.parse('cos(3.14)').evaluate({})  # -0.9999987317275395
+    parser.parse('tan(3.14)').evaluate({})  # -0.0015926549364072232
+    
+    parser.parse('asin(1)').evaluate({})  # 1.5707963267948966
+    parser.parse('acos(1)').evaluate({})  # 0.0
+    parser.parse('atan(1)').evaluate({})  # 0.7853981633974483
+    
+    parser.parse('log(1)').evaluate({})  # 0.0
