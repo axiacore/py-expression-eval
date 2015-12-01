@@ -1,5 +1,4 @@
-Python Mathematical Expression Evaluator
-========================================
+# Python Mathematical Expression Evaluator
 
 [![PyPi version](https://pypip.in/v/py_expression_eval/badge.png)](https://crate.io/packages/py_expression_eval/)
 [![PyPi downloads](https://pypip.in/d/py_expression_eval/badge.png)](https://crate.io/packages/py_expression_eval/)
@@ -13,14 +12,85 @@ You are free to use and modify this code in anyway you find useful. Please leave
 to acknowledge its original source. If you feel like it, I enjoy hearing about projects that use my code,
 but don't feel like you have to let me know or ask permission.
 
-Installation
-------------
+## Installation
 
     pip install py_expression_eval
+    
+## Documentation
 
-Examples
---------
+All the classes and methods of ``py-expression-eval`` were written as similar as possible to their analogues from   [js-expression-eval](https://github.com/silentmatt/js-expression-eval) to make it easier to use for validation on back-end side.
 
+### Parser
+
+
+``Parser`` is the main class of the library that contains the methods to parse, evaluate and simplify mathematical expressions. In order to use the library you need to create an instance of this class:
+
+    > parser = Parser()
+    
+Once you instantiated ``Parser`` class, you can create ``Expression`` object using ``parse`` method:
+
+    > parser.parse('2 * 3')
+    Out: <py_expression_eval.Expression instance at 0x7f40cc4e5ef0>
+
+### Parser.Expression
+
+``evaluate()`` takes a dictionary with variables as a parameter and returns the value of the expression:
+
+    > parser.parse('2 * 3').evaluate({})
+    Out: 6.0
+    > parser.parse('2 * x').evaluate({'x': 7})
+    Out: 14.0
+
+``substitute()`` creates a new expression where specified variables are replaces with a new expression. For example, to replace ``x`` with ``3 + x`` in ``2 * x`` expression we use the following code:
+
+    > parser.parse('2 * x').substitute('x', '3 + x').toString()
+    Out: '(2.0*(3.0+x))'
+    
+``variables()`` returns a list of the variables for the expression:
+
+    > parser.parse('2 * x + y').variables()
+    Out: ['x', 'y']
+    
+``simplify()`` simplifies the expression. For example,
+
+    > parser.parse('2 * 3 * x + y').simplify({}).toString()
+    Out: '((6.0*x)+y)'
+    > parser.parse('2 * 3 * x + y').simplify({'x': -1}).toString()
+    Out: '(-6.0+y)'
+    > parser.parse('cos(PI) + x').simplify({}).toString()
+    Out: '(-1.0+x)'
+
+``toString()`` converts the expression to a string.
+
+### Available operators, constants and functions
+
+Expression | Example | Output
+---------- | ------- | ------ 
++          | ``parser.parse('2 + 2').evaluate({})`` | 4.0
+-          | ``parser.parse('3 - 1').evaluate({})`` | 2.0
+*          | ``parser.parse('2 * 3').evaluate({})`` | 6.0
+/          | ``parser.parse('5 / 2').evaluate({})`` | 2.5
+%          | ``parser.parse('5 % 2').evaluate({})`` | 1.0
+^          | ``parser.parse('5 ^ 2').evaluate({})`` | 25.0
+PI         | ``parser.parse('PI').evaluate({})`` | 3.141592653589793
+E          | ``parser.parse('E').evaluate({})`` | 2.718281828459045
+sin(x)     | ``parser.parse('sin(0)').evaluate({})`` | 0.0
+cos(x)     | ``parser.parse('cos(PI)').evaluate({})`` | - 1.0
+tan(x)     | ``parser.parse('tan(0)').evaluate({})`` | 0.0
+asin(x)     | ``parser.parse('asin(0)').evaluate({})`` | 0.0
+acos(x)     | ``parser.parse('acos(-1)').evaluate({})`` | 3.141592653589793
+atan(x)    | ``parser.parse('atan(PI)').evaluate({})`` | 1.2626272556789118
+log(x)    | ``parser.parse('log(1)').evaluate({})`` | 0.0
+abs(x)    | ``parser.parse('abs(-1)').evaluate({})`` | 1.0
+ceil(x)    | ``parser.parse('ceil(2.7)').evaluate({})`` | 3.0
+floor(x)    | ``parser.parse('floor(2.7)').evaluate({})`` | 2.0
+round(x)    | ``parser.parse('round(2.7)').evaluate({})`` | 3.0
+exp(x)    | ``parser.parse('exp(2)').evaluate({})`` | 7.38905609893065
+
+## Examples
+
+    from py_expression_eval import Parser
+    
     parser = Parser()
     parser.parse('2 * 3').evaluate({})  # 6
     parser.parse('2 ^ x').evaluate({'x': 3})  # 8
@@ -53,6 +123,8 @@ Examples
 Available operations
 --------------------
 
+    from py_expression_eval import Parser
+    
     parser = Parser()
     parser.parse('2 + 3').evaluate({})  # 5.0
     parser.parse('2 - 3').evaluate({})  # -1.0
