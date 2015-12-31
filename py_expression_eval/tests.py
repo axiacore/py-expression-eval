@@ -15,11 +15,16 @@ import unittest
 
 from py_expression_eval import Parser
 
-
+def testFunction(a,b):
+    return 2*a+3*b
 class ParserTestCase(unittest.TestCase):
 
     def test_parser(self):
         parser = Parser()
+        #parser and variables
+        self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
+
+        #evaluate
         self.assertEqual(parser.parse('2 * 3').evaluate({}), 6)
         self.assertEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8)
         self.assertEqual(parser.parse('2 * x + 1').evaluate({'x': 3}), 7)
@@ -30,6 +35,15 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('-3^x').evaluate({'x': 4}), -81)
         self.assertEqual(parser.parse('(-3)^x').evaluate({'x': 4}), 81)
         self.assertEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
+        self.assertEqual(parser.parse("x||y").evaluate({'x': 'hello ', 'y': 'world'}), 'hello world')
+        self.assertEqual(parser.parse("'x'||'y'").evaluate({}), 'xy')
+        #functions
+        self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
+        self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
+
+        #external function
+        self.assertEqual(parser.parse('testFunction(x , y)').evaluate({"x":2,"y":3,"testFunction":testFunction}),13)
+
 
         # test substitute
         expr = parser.parse('2 * x + 1')

@@ -133,11 +133,11 @@ class Expression():
             elif type_ == TFUNCALL:
                 n1 = nstack.pop()
                 f = nstack.pop()
-                if f.apply and f.call:
+                if callable(f):
                     if type(n1) is list:
-                        nstack.append(f.apply(None, n1))
+                        nstack.append(apply(f, n1))
                     else:
-                        nstack.append(f.call(None, n1))
+                        nstack.append(call(f, n1))
                 else:
                     raise Exception(f + ' is not a function')
             else:
@@ -370,8 +370,11 @@ class Parser:
     def mod(self, a, b):
         return a % b
 
-    def concat(self, a, b):
-        return u'{0}{1}'.format(a, b)
+    def concat(self, a, b,*args):
+        result=u'{0}{1}'.format(a, b)
+        for arg in args:
+            result=u'{0}{1}'.format(result, arg)
+        return result
 
     def neg(self, a):
         return -a
@@ -439,6 +442,7 @@ class Parser:
             'pyt': self.pyt,
             'pow': math.pow,
             'atan2': math.atan2,
+            'concat':self.concat
         }
 
         self.consts = {
@@ -512,7 +516,7 @@ class Parser:
                     self.error_parsing(self.pos, 'unexpected string')
                 token = Token(TNUMBER, 0, 0, self.tokennumber)
                 tokenstack.append(token)
-                expected = self.OPERATOR or self.RPAREN | self.COMMA
+                expected = self.OPERATOR | self.RPAREN | self.COMMA
             elif self.isLeftParenth():
                 if (expected & self.LPAREN) == 0:
                     self.error_parsing(self.pos, 'unexpected \"(\"')
@@ -670,13 +674,13 @@ class Parser:
                 else:
                     buffer.append(c)
 
-        return buffer.join('')
+        return ''.join(buffer)
 
     def isString(self):
         r = False
         str = ''
         startpos = self.pos
-        if self.pos < len(self.expression) and self.expression[self.pos] == '':
+        if self.pos < len(self.expression) and self.expression[self.pos] == "'":
             self.pos += 1
             while self.pos < len(self.expression):
                 code = self.expression[self.pos]
@@ -762,7 +766,12 @@ class Parser:
 
     def isComma(self):
         code = self.expression[self.pos]
-        return code == ','
+        if code==',':
+            self.pos+=1
+            self.tokenprio=-1
+            self.tokenindex=","
+            return True
+        return False
 
     def isWhite(self):
         code = self.expression[self.pos]
