@@ -18,6 +18,8 @@ from py_expression_eval import Parser
 def testFunction(a,b):
     return 2*a+3*b
 class ParserTestCase(unittest.TestCase):
+    def setUp(self):
+        self.parser = Parser()
 
     def test_parser(self):
         parser = Parser()
@@ -59,6 +61,28 @@ class ParserTestCase(unittest.TestCase):
         expr = parser.parse('x * (y * atan(1))')
         self.assertEqual(expr.variables(), ['x', 'y'])
         self.assertEqual(expr.simplify({'y': 4}).variables(), ['x'])
+
+    def test_consts(self):
+        # self.assertEqual(self.parser.parse("PI ").variables(), [""])
+        self.assertEqual(self.parser.parse("PI").variables(), [])
+        self.assertEqual(self.parser.parse("PI ").variables(), [])
+        self.assertEqual(self.parser.parse("E ").variables(), [])
+        self.assertEqual(self.parser.parse(" E").variables(), [])
+        self.assertEqual(self.parser.parse("E").variables(), [])
+        self.assertEqual(self.parser.parse("E+1").variables(), [])
+        self.assertEqual(self.parser.parse("E / 1").variables(), [])
+        self.assertEqual(self.parser.parse("sin(PI)+E").variables(), [])
+
+    def test_parsing_e_and_pi(self):
+        self.assertEqual(self.parser.parse('Pie').variables(), ["Pie"])
+        self.assertEqual(self.parser.parse('PIe').variables(), ["PIe"])
+        self.assertEqual(self.parser.parse('Eval').variables(), ["Eval"])
+        self.assertEqual(self.parser.parse('Eval1').variables(), ["Eval1"])
+        self.assertEqual(self.parser.parse('EPI').variables(), ["EPI"])
+        self.assertEqual(self.parser.parse('PIE').variables(), ["PIE"])
+        self.assertEqual(self.parser.parse('Engage').variables(), ["Engage"])
+        self.assertEqual(self.parser.parse('Engage * PIE').variables(), ["Engage", "PIE"])
+        self.assertEqual(self.parser.parse('Engage_').variables(), ["Engage_"])
 
 if __name__ == '__main__':
     unittest.main()

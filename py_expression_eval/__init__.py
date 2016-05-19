@@ -699,9 +699,14 @@ class Parser:
             L = len(i)
             str = self.expression[self.pos:self.pos+L]
             if i == str:
-                self.tokennumber = self.consts[i]
-                self.pos += L
-                return True
+                if len(self.expression) <= self.pos + L:
+                    self.tokennumber = self.consts[i]
+                    self.pos += L
+                    return True
+                if not self.expression[self.pos + L].isalpha():
+                    self.tokennumber = self.consts[i]
+                    self.pos += L
+                    return True
         return False
 
     def isOperator(self):
