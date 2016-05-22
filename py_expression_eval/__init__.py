@@ -703,7 +703,7 @@ class Parser:
                     self.tokennumber = self.consts[i]
                     self.pos += L
                     return True
-                if not self.expression[self.pos + L].isalpha():
+                if not self.expression[self.pos + L].isalnum() and self.expression[self.pos + L] != "_":
                     self.tokennumber = self.consts[i]
                     self.pos += L
                     return True
