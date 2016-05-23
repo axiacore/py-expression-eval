@@ -3,6 +3,8 @@
 [![PyPi version](https://img.shields.io/pypi/v/py_expression_eval.svg)](https://pypi.python.org/pypi/py_expression_eval/)
 [![PyPi downloads](https://img.shields.io/pypi/dm/py_expression_eval.svg)](https://pypi.python.org/pypi/py_expression_eval/)
 
+[![Coverage Status](https://coveralls.io/repos/github/Axiacore/py-expression-eval/badge.svg?branch=master)](https://coveralls.io/github/Axiacore/py-expression-eval?branch=master)
+
 Based on js-expression-eval, by Matthew Crumley (email@matthewcrumley.com, http://silentmatt.com/)
 https://github.com/silentmatt/js-expression-eval
 
