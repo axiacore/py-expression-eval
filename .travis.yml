@@ -7,3 +7,6 @@ python:
 
 script:
   - python setup.py test
+  - pip install coveralls
+
+after_success: coveralls
