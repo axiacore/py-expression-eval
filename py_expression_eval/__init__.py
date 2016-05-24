@@ -135,7 +135,7 @@ class Expression():
                 f = nstack.pop()
                 if callable(f):
                     if type(n1) is list:
-                        nstack.append(apply(f, n1))
+                        nstack.append(f(*n1))
                     else:
                         nstack.append(call(f, n1))
                 else:
@@ -324,9 +324,9 @@ class Parser:
                     n1 = nstack.pop()
                     f = item.index_
                     if f == '-':
-                        nstack.append('(' + f + n1 + ')')
+                        nstack.append('({0}{1})'.format(f, n1))
                     else:
-                        nstack.append(f + '(' + n1 + ')')
+                        nstack.append('{0}({1})'.format(f, n1))
                 elif type_ == TFUNCALL:
                     n1 = nstack.pop()
                     f = nstack.pop()
