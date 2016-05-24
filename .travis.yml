@@ -1,0 +1,12 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+
+script:
+  - python setup.py test
+  - pip install coveralls
+
+after_success: coveralls

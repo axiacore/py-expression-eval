@@ -6,8 +6,9 @@ setup(
     description='Python Mathematical Expression Evaluator',
     url='https://github.com/AxiaCore/py-expression-eval/',
     author='vero4ka',
-    author_email='ctrl-alt-delete@live.ru',
+    author_email='vero4ka.ru@gmail.com',
     license='MIT',
     packages=['py_expression_eval'],
     zip_safe=False,
+    test_suite='py_expression_eval.tests',
 )
