@@ -83,6 +83,17 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(self.parser.parse('Engage').variables(), ["Engage"])
         self.assertEqual(self.parser.parse('Engage * PIE').variables(), ["Engage", "PIE"])
         self.assertEqual(self.parser.parse('Engage_').variables(), ["Engage_"])
+        self.assertEqual(self.parser.parse('Engage1').variables(), ["Engage1"])
+        self.assertEqual(self.parser.parse('E1').variables(), ["E1"])
+        self.assertEqual(self.parser.parse('PI2').variables(), ["PI2"])
+        self.assertEqual(self.parser.parse('(E1 + PI)').variables(), ["E1"])
+        self.assertEqual(self.parser.parse('E1_').variables(), ["E1_"])
+        self.assertEqual(self.parser.parse('E_').variables(), ["E_"])
+
+    def test_evaluating_consts(self):
+        self.assertEqual(self.parser.evaluate("Engage1", variables={"Engage1": 2}), 2)
+        self.assertEqual(self.parser.evaluate("Engage1 + 1", variables={"Engage1": 1}), 2)
+
 
 if __name__ == '__main__':
     unittest.main()
