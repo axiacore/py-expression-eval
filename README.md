@@ -1,7 +1,6 @@
 # Python Mathematical Expression Evaluator
 
-[![PyPi version](https://pypip.in/v/py_expression_eval/badge.png)](https://crate.io/packages/py_expression_eval/)
-[![PyPi downloads](https://pypip.in/d/py_expression_eval/badge.png)](https://crate.io/packages/py_expression_eval/)
+[![Build Status](https://travis-ci.org/Axiacore/py-expression-eval.svg?branch=master)](https://travis-ci.org/Axiacore/py-expression-eval)
 
 Based on js-expression-eval, by Matthew Crumley (email@matthewcrumley.com, http://silentmatt.com/)
 https://github.com/silentmatt/js-expression-eval
