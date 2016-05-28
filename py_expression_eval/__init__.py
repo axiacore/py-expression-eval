@@ -376,6 +376,30 @@ class Parser:
             result=u'{0}{1}'.format(result, arg)
         return result
 
+    def equal (self, a, b ):
+        return a == b
+
+    def notEqual (self, a, b ):
+        return a != b
+
+    def greaterThan (self, a, b ):
+        return a > b
+
+    def lessThan (self, a, b ):
+        return a < b
+
+    def greaterThanEqual (self, a, b ):
+        return a >= b
+
+    def lessThanEqual (self, a, b ):
+        return a <= b
+
+    def andOperator (self, a, b ):
+        return ( a and b )
+
+    def orOperator (self, a, b ):
+        return  ( a or  b )
+
     def neg(self, a):
         return -a
 
@@ -432,6 +456,14 @@ class Parser:
             '^': math.pow,
             ',': self.append,
             '||': self.concat,
+            "==": self.equal,
+            "!=": self.notEqual,
+            ">": self.greaterThan,
+            "<": self.lessThan,
+            ">=": self.greaterThanEqual,
+            "<=": self.lessThanEqual,
+            "and": self.andOperator,
+            "or": self.orOperator
         }
 
         self.functions = {
@@ -724,6 +756,36 @@ class Parser:
                 self.tokenindex = '||'
             else:
                 return False
+        elif code == '=':
+            if self.expression[self.pos + 1] == "=":
+                self.pos += 1
+                self.tokenprio = 1
+                self.tokenindex = "=="
+
+            else:
+                return False
+        elif code == "!":
+            if self.expression[self.pos + 1] == "=":
+                self.pos += 1
+                self.tokenprio = 1
+                self.tokenindex = "!="
+            else:
+                return False
+        elif code == 'a':
+            if self.expression[self.pos + 1] == 'n' and self.expression[self.pos + 2] == 'd':
+                self.pos += 2
+                self.tokenprio = 0
+                self.tokenindex = "and"
+            else:
+                return False
+        elif code == 'o':
+            if self.expression[self.pos + 1] == 'r':
+                self.pos += 1
+                self.tokenprio = 0
+                self.tokenindex = "or"
+            else:
+                return False
+
         elif code == '*':
             self.tokenprio = 1
             self.tokenindex = '*'

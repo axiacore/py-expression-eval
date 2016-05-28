@@ -39,6 +39,12 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
         self.assertEqual(parser.parse("x||y").evaluate({'x': 'hello ', 'y': 'world'}), 'hello world')
         self.assertEqual(parser.parse("'x'||'y'").evaluate({}), 'xy')
+        self.assertEqual ( parser.parse ( "'x'=='x'" ).evaluate ( {} ), True )
+        self.assertEqual ( parser.parse ( "(a+b)==c" ).evaluate ( {'a':1,'b':2,'c':3} ), True )
+        self.assertEqual ( parser.parse ( "(a+b)!=c" ).evaluate ( {'a': 1, 'b': 2, 'c': 3} ), False )
+        self.assertEqual ( parser.parse ( "(a^2-b^2)==((a+b)*(a-b))" ).evaluate ( {'a': 4859, 'b': 13150} ), True )
+        self.assertEqual ( parser.parse ( "(a^2-b^2+1)==((a+b)*(a-b))" ).evaluate ( {'a': 4859, 'b': 13150} ), False )
+
         #functions
         self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
