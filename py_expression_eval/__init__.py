@@ -153,7 +153,10 @@ class Expression():
             item = self.tokens[i]
             type_ = item.type_
             if type_ == TNUMBER:
-                nstack.append(item.number_)
+                if type(item.number_) == str:
+                    nstack.append("'"+item.number_+"'")
+                else:
+                    nstack.append( item.number_)
             elif type_ == TOP2:
                 n2 = nstack.pop()
                 n1 = nstack.pop()
@@ -195,6 +198,7 @@ class Expression():
 
 
 class Parser:
+
 
     class Expression():
 
