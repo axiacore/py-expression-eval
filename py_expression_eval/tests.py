@@ -15,6 +15,7 @@ import unittest
 
 from py_expression_eval import Parser
 
+
 def testFunction(a,b):
     return 2*a+3*b
 class ParserTestCase(unittest.TestCase):
@@ -39,6 +40,12 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
         self.assertEqual(parser.parse("x||y").evaluate({'x': 'hello ', 'y': 'world'}), 'hello world')
         self.assertEqual(parser.parse("'x'||'y'").evaluate({}), 'xy')
+        self.assertEqual(parser.parse("'x'=='x'").evaluate({}), True)
+        self.assertEqual(parser.parse("(a+b)==c").evaluate({'a': 1, 'b': 2, 'c': 3}), True)
+        self.assertEqual(parser.parse("(a+b)!=c").evaluate({'a': 1, 'b': 2, 'c': 3}), False)
+        self.assertEqual(parser.parse("(a^2-b^2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
+        self.assertEqual(parser.parse("(a^2-b^2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
+
         #functions
         self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
@@ -56,6 +63,18 @@ class ParserTestCase(unittest.TestCase):
         expr = parser.parse('x * (y * atan(1))').simplify({'y': 4})
         self.assertIn('x*3.141592', expr.toString())
         self.assertEqual(expr.evaluate({'x': 2}), 6.283185307179586)
+
+        # test toString with string constant
+        expr = parser.parse("'a'=='b'")
+        self.assertIn("'a'=='b'",expr.toString())
+        expr = parser.parse("concat('a\n','\n','\rb')=='a\n\n\rb'")
+        self.assertEqual(expr.evaluate({}),True)
+
+        #test toString with an external function
+        expr=parser.parse("myExtFn(a,b,c,1.51,'ok')")
+        self.assertEqual(expr.substitute("a",'first').toString(),"myExtFn(first,b,c,1.51,'ok')")
+
+
 
         # test variables
         expr = parser.parse('x * (y * atan(1))')

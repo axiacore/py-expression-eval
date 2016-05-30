@@ -153,7 +153,10 @@ class Expression():
             item = self.tokens[i]
             type_ = item.type_
             if type_ == TNUMBER:
-                nstack.append(item.number_)
+                if type(item.number_) == str:
+                    nstack.append("'"+item.number_+"'")
+                else:
+                    nstack.append( item.number_)
             elif type_ == TOP2:
                 n2 = nstack.pop()
                 n1 = nstack.pop()
@@ -161,11 +164,17 @@ class Expression():
                 if toJS and f == '^':
                     nstack.append('math.pow(' + n1 + ',' + n2 + ')')
                 else:
-                    nstack.append('({n1}{f}{n2})'.format(
+                    frm='({n1}{f}{n2})'
+                    if f == ',':
+                        frm = '{n1}{f}{n2}'
+
+                    nstack.append(frm.format(
                         n1=n1,
                         n2=n2,
                         f=f,
                     ))
+
+
             elif type_ == TVAR:
                 nstack.append(item.index_)
             elif type_ == TOP1:
@@ -195,6 +204,7 @@ class Expression():
 
 
 class Parser:
+
 
     class Expression():
 
@@ -376,6 +386,30 @@ class Parser:
             result=u'{0}{1}'.format(result, arg)
         return result
 
+    def equal (self, a, b ):
+        return a == b
+
+    def notEqual (self, a, b ):
+        return a != b
+
+    def greaterThan (self, a, b ):
+        return a > b
+
+    def lessThan (self, a, b ):
+        return a < b
+
+    def greaterThanEqual (self, a, b ):
+        return a >= b
+
+    def lessThanEqual (self, a, b ):
+        return a <= b
+
+    def andOperator (self, a, b ):
+        return ( a and b )
+
+    def orOperator (self, a, b ):
+        return  ( a or  b )
+
     def neg(self, a):
         return -a
 
@@ -432,6 +466,14 @@ class Parser:
             '^': math.pow,
             ',': self.append,
             '||': self.concat,
+            "==": self.equal,
+            "!=": self.notEqual,
+            ">": self.greaterThan,
+            "<": self.lessThan,
+            ">=": self.greaterThanEqual,
+            "<=": self.lessThanEqual,
+            "and": self.andOperator,
+            "or": self.orOperator
         }
 
         self.functions = {
@@ -724,6 +766,36 @@ class Parser:
                 self.tokenindex = '||'
             else:
                 return False
+        elif code == '=':
+            if self.expression[self.pos + 1] == "=":
+                self.pos += 1
+                self.tokenprio = 1
+                self.tokenindex = "=="
+
+            else:
+                return False
+        elif code == "!":
+            if self.expression[self.pos + 1] == "=":
+                self.pos += 1
+                self.tokenprio = 1
+                self.tokenindex = "!="
+            else:
+                return False
+        elif code == 'a':
+            if self.expression[self.pos + 1] == 'n' and self.expression[self.pos + 2] == 'd':
+                self.pos += 2
+                self.tokenprio = 0
+                self.tokenindex = "and"
+            else:
+                return False
+        elif code == 'o':
+            if self.expression[self.pos + 1] == 'r':
+                self.pos += 1
+                self.tokenprio = 0
+                self.tokenindex = "or"
+            else:
+                return False
+
         elif code == '*':
             self.tokenprio = 1
             self.tokenindex = '*'
@@ -817,11 +889,14 @@ class Parser:
 
     def isVar(self):
         str = ''
+        inQuotes = False
         for i in range(self.pos, len(self.expression)):
             c = self.expression[i]
             if c.lower() == c.upper():
-                if i == self.pos or (c != '_' and (c < '0' or c > '9')):
+                if ((i == self.pos and c != '"') or (not (c in '_."') and (c < '0' or c > '9'))) and not inQuotes :
                     break
+            if c == '"':
+                inQuotes = not inQuotes
             str += c
         if str:
             self.tokenindex = str
