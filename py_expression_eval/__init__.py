@@ -164,11 +164,17 @@ class Expression():
                 if toJS and f == '^':
                     nstack.append('math.pow(' + n1 + ',' + n2 + ')')
                 else:
-                    nstack.append('({n1}{f}{n2})'.format(
+                    frm='({n1}{f}{n2})'
+                    if f == ',':
+                        frm = '{n1}{f}{n2}'
+
+                    nstack.append(frm.format(
                         n1=n1,
                         n2=n2,
                         f=f,
                     ))
+
+
             elif type_ == TVAR:
                 nstack.append(item.index_)
             elif type_ == TOP1:
@@ -883,11 +889,14 @@ class Parser:
 
     def isVar(self):
         str = ''
+        inQuotes = False
         for i in range(self.pos, len(self.expression)):
             c = self.expression[i]
             if c.lower() == c.upper():
-                if i == self.pos or (c != '_' and (c < '0' or c > '9')):
+                if ((i == self.pos and c != '"') or (not (c in '_."') and (c < '0' or c > '9'))) and not inQuotes :
                     break
+            if c == '"':
+                inQuotes = not inQuotes
             str += c
         if str:
             self.tokenindex = str
