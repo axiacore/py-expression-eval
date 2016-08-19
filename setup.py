@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='py_expression_eval',
-    version='0.3.2',
+    version='0.3.3',
     description='Python Mathematical Expression Evaluator',
     url='https://github.com/AxiaCore/py-expression-eval/',
     author='vero4ka',
