@@ -752,48 +752,26 @@ class Parser:
         return False
 
     def isOperator(self):
-        if self.expression[self.pos] == '+':
-            self.tokenprio = 0
-            self.tokenindex = '+'
-        elif self.expression[self.pos] == '-':
-            self.tokenprio = 0
-            self.tokenindex = '-'
-        elif self.expression[self.pos:self.pos + 2] == '||':
-            self.pos += 1
-            self.tokenprio = 0
-            self.tokenindex = '||'
-        elif self.expression[self.pos:self.pos + 2] == '==':
-            self.pos += 1
-            self.tokenprio = 1
-            self.tokenindex = "=="
-        elif self.expression[self.pos:self.pos + 2] == '!=':
-            self.pos += 1
-            self.tokenprio = 1
-            self.tokenindex = "!="
-        elif self.expression[self.pos:self.pos + 3] == 'and':
-            self.pos += 2
-            self.tokenprio = 0
-            self.tokenindex = "and"
-        elif self.expression[self.pos:self.pos + 2] == 'or':
-            self.pos += 1
-            self.tokenprio = 0
-            self.tokenindex = "or"
-        elif self.expression[self.pos] == '*':
-            self.tokenprio = 1
-            self.tokenindex = '*'
-        elif self.expression[self.pos] == '/':
-            self.tokenprio = 2
-            self.tokenindex = '/'
-        elif self.expression[self.pos] == '%':
-            self.tokenprio = 2
-            self.tokenindex = '%'
-        elif self.expression[self.pos] == '^':
-            self.tokenprio = 3
-            self.tokenindex = '^'
-        else:
-            return False
-        self.pos += 1
-        return True
+        ops = (
+            ('+', 0),
+            ('-', 0),
+            ('||', 0),
+            ('==', 1),
+            ('!=', 1),
+            ('and', 0),
+            ('or', 0),
+            ('*', 1),
+            ('/', 2),
+            ('%', 2),
+            ('^', 3),
+        )
+        for operator, priority in ops:
+            if self.expression.startswith(operator, self.pos):
+                self.tokenprio = priority
+                self.tokenindex = operator
+                self.pos += len(operator)
+                return True
+        return False
 
     def isSign(self):
         code = self.expression[self.pos - 1]
