@@ -91,6 +91,9 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(expr.variables(), ['x', 'y'])
         self.assertEqual(expr.simplify({'y': 4}).variables(), ['x'])
 
+        # list operations
+        self.assertEqual(parser.parse('a, 3').evaluate({'a': [1, 2]}), [1, 2, 3])
+
     def test_consts(self):
         # self.assertEqual(self.parser.parse("PI ").variables(), [""])
         self.assertEqual(self.parser.parse("PI").variables(), [])
