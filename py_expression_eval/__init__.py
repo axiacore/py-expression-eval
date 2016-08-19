@@ -753,23 +753,29 @@ class Parser:
 
     def isOperator(self):
         ops = (
-            ('+', 0),
-            ('-', 0),
-            ('||', 0),
-            ('==', 1),
-            ('!=', 1),
-            ('and', 0),
-            ('or', 0),
-            ('*', 1),
-            ('/', 2),
-            ('%', 2),
-            ('^', 3),
+            ('+', 0, '+'),
+            ('-', 0, '-'),
+            ('*', 1, '*'),
+            ('\u2219', 1, '*'), # bullet operator
+            ('\u2022', 1, '*'), # black small circle
+            ('/', 2, '/'),
+            ('%', 2, '%'),
+            ('^', 3, '^'),
+            ('||', 0, '||'),
+            ('==', 1, '=='),
+            ('!=', 1, '!='),
+            ('<=', 1, '<='),
+            ('>=', 1, '>='),
+            ('<', 1, '<'),
+            ('>', 1, '>'),
+            ('and', 0, 'and'),
+            ('or', 0, 'or'),
         )
-        for operator, priority in ops:
-            if self.expression.startswith(operator, self.pos):
+        for token, priority, index in ops:
+            if self.expression.startswith(token, self.pos):
                 self.tokenprio = priority
-                self.tokenindex = operator
-                self.pos += len(operator)
+                self.tokenindex = index
+                self.pos += len(token)
                 return True
         return False
 
