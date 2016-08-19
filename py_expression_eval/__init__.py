@@ -532,7 +532,7 @@ class Parser:
             if self.isOperator():
                 if self.isSign() and expected & self.SIGN:
                     if self.isNegativeSign():
-                        self.tokenprio = 2
+                        self.tokenprio = 5
                         self.tokenindex = '-'
                         noperators += 1
                         self.addfunc(tokenstack, operstack, TOP1)
@@ -752,66 +752,32 @@ class Parser:
         return False
 
     def isOperator(self):
-        code = self.expression[self.pos]
-        if code == '+':
-            self.tokenprio = 0
-            self.tokenindex = '+'
-        elif code == '-':
-            self.tokenprio = 0
-            self.tokenindex = '-'
-        elif code == '|':
-            if self.expression[self.pos] == '|':
-                self.pos += 1
-                self.tokenprio = 0
-                self.tokenindex = '||'
-            else:
-                return False
-        elif code == '=':
-            if self.expression[self.pos + 1] == "=":
-                self.pos += 1
-                self.tokenprio = 1
-                self.tokenindex = "=="
-
-            else:
-                return False
-        elif code == "!":
-            if self.expression[self.pos + 1] == "=":
-                self.pos += 1
-                self.tokenprio = 1
-                self.tokenindex = "!="
-            else:
-                return False
-        elif code == 'a':
-            if self.expression[self.pos + 1] == 'n' and self.expression[self.pos + 2] == 'd':
-                self.pos += 2
-                self.tokenprio = 0
-                self.tokenindex = "and"
-            else:
-                return False
-        elif code == 'o':
-            if self.expression[self.pos + 1] == 'r':
-                self.pos += 1
-                self.tokenprio = 0
-                self.tokenindex = "or"
-            else:
-                return False
-
-        elif code == '*':
-            self.tokenprio = 1
-            self.tokenindex = '*'
-        elif code == '/':
-            self.tokenprio = 2
-            self.tokenindex = '/'
-        elif code == '%':
-            self.tokenprio = 2
-            self.tokenindex = '%'
-        elif code == '^':
-            self.tokenprio = 3
-            self.tokenindex = '^'
-        else:
-            return False
-        self.pos += 1
-        return True
+        ops = (
+            ('+', 2, '+'),
+            ('-', 2, '-'),
+            ('*', 3, '*'),
+            (u'\u2219', 3, '*'), # bullet operator
+            (u'\u2022', 3, '*'), # black small circle
+            ('/', 4, '/'),
+            ('%', 4, '%'),
+            ('^', 6, '^'),
+            ('||', 1, '||'),
+            ('==', 1, '=='),
+            ('!=', 1, '!='),
+            ('<=', 1, '<='),
+            ('>=', 1, '>='),
+            ('<', 1, '<'),
+            ('>', 1, '>'),
+            ('and', 0, 'and'),
+            ('or', 0, 'or'),
+        )
+        for token, priority, index in ops:
+            if self.expression.startswith(token, self.pos):
+                self.tokenprio = priority
+                self.tokenindex = index
+                self.pos += len(token)
+                return True
+        return False
 
     def isSign(self):
         code = self.expression[self.pos - 1]
@@ -867,7 +833,7 @@ class Parser:
             str += c
         if len(str) > 0 and str in self.ops1:
             self.tokenindex = str
-            self.tokenprio = 5
+            self.tokenprio = 7
             self.pos += len(str)
             return True
         return False
@@ -882,7 +848,7 @@ class Parser:
             str += c
         if len(str) > 0 and (str in self.ops2):
             self.tokenindex = str
-            self.tokenprio = 5
+            self.tokenprio = 7
             self.pos += len(str)
             return True
         return False

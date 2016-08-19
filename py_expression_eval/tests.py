@@ -28,8 +28,18 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
 
         #evaluate
+        self.assertEqual(parser.parse('1').evaluate({}), 1)
+        self.assertEqual(parser.parse('a').evaluate({'a': 2}), 2)
         self.assertEqual(parser.parse('2 * 3').evaluate({}), 6)
+        self.assertEqual(parser.parse(u'2 \u2219 3').evaluate({}), 6)
+        self.assertEqual(parser.parse(u'2 \u2022 3').evaluate({}), 6)
         self.assertEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8)
+        self.assertEqual(parser.parse('x < 3').evaluate({'x': 3}), False)
+        self.assertEqual(parser.parse('x < 3').evaluate({'x': 2}), True)
+        self.assertEqual(parser.parse('x <= 3').evaluate({'x': 3}), True)
+        self.assertEqual(parser.parse('x <= 3').evaluate({'x': 4}), False)
+        self.assertEqual(parser.parse('x > 3').evaluate({'x': 4}), True)
+        self.assertEqual(parser.parse('x >= 3').evaluate({'x': 3}), True)
         self.assertEqual(parser.parse('2 * x + 1').evaluate({'x': 3}), 7)
         self.assertEqual(parser.parse('2 + 3 * x').evaluate({'x': 4}), 14)
         self.assertEqual(parser.parse('(2 + 3) * x').evaluate({'x': 4}), 20)
@@ -80,6 +90,9 @@ class ParserTestCase(unittest.TestCase):
         expr = parser.parse('x * (y * atan(1))')
         self.assertEqual(expr.variables(), ['x', 'y'])
         self.assertEqual(expr.simplify({'y': 4}).variables(), ['x'])
+
+        # list operations
+        self.assertEqual(parser.parse('a, 3').evaluate({'a': [1, 2]}), [1, 2, 3])
 
     def test_consts(self):
         # self.assertEqual(self.parser.parse("PI ").variables(), [""])
