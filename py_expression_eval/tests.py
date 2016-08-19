@@ -28,6 +28,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
 
         #evaluate
+        self.assertEqual(parser.parse('1').evaluate({}), 1)
+        self.assertEqual(parser.parse('a').evaluate({'a': 2}), 2)
         self.assertEqual(parser.parse('2 * 3').evaluate({}), 6)
         self.assertEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8)
         self.assertEqual(parser.parse('2 * x + 1').evaluate({'x': 3}), 7)

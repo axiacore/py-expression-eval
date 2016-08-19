@@ -752,60 +752,42 @@ class Parser:
         return False
 
     def isOperator(self):
-        code = self.expression[self.pos]
-        if code == '+':
+        if self.expression[self.pos] == '+':
             self.tokenprio = 0
             self.tokenindex = '+'
-        elif code == '-':
+        elif self.expression[self.pos] == '-':
             self.tokenprio = 0
             self.tokenindex = '-'
-        elif code == '|':
-            if self.expression[self.pos] == '|':
-                self.pos += 1
-                self.tokenprio = 0
-                self.tokenindex = '||'
-            else:
-                return False
-        elif code == '=':
-            if self.expression[self.pos + 1] == "=":
-                self.pos += 1
-                self.tokenprio = 1
-                self.tokenindex = "=="
-
-            else:
-                return False
-        elif code == "!":
-            if self.expression[self.pos + 1] == "=":
-                self.pos += 1
-                self.tokenprio = 1
-                self.tokenindex = "!="
-            else:
-                return False
-        elif code == 'a':
-            if self.expression[self.pos + 1] == 'n' and self.expression[self.pos + 2] == 'd':
-                self.pos += 2
-                self.tokenprio = 0
-                self.tokenindex = "and"
-            else:
-                return False
-        elif code == 'o':
-            if self.expression[self.pos + 1] == 'r':
-                self.pos += 1
-                self.tokenprio = 0
-                self.tokenindex = "or"
-            else:
-                return False
-
-        elif code == '*':
+        elif self.expression[self.pos:self.pos + 2] == '||':
+            self.pos += 1
+            self.tokenprio = 0
+            self.tokenindex = '||'
+        elif self.expression[self.pos:self.pos + 2] == '==':
+            self.pos += 1
+            self.tokenprio = 1
+            self.tokenindex = "=="
+        elif self.expression[self.pos:self.pos + 2] == '!=':
+            self.pos += 1
+            self.tokenprio = 1
+            self.tokenindex = "!="
+        elif self.expression[self.pos:self.pos + 3] == 'and':
+            self.pos += 2
+            self.tokenprio = 0
+            self.tokenindex = "and"
+        elif self.expression[self.pos:self.pos + 2] == 'or':
+            self.pos += 1
+            self.tokenprio = 0
+            self.tokenindex = "or"
+        elif self.expression[self.pos] == '*':
             self.tokenprio = 1
             self.tokenindex = '*'
-        elif code == '/':
+        elif self.expression[self.pos] == '/':
             self.tokenprio = 2
             self.tokenindex = '/'
-        elif code == '%':
+        elif self.expression[self.pos] == '%':
             self.tokenprio = 2
             self.tokenindex = '%'
-        elif code == '^':
+        elif self.expression[self.pos] == '^':
             self.tokenprio = 3
             self.tokenindex = '^'
         else:
