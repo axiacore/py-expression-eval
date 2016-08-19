@@ -532,7 +532,7 @@ class Parser:
             if self.isOperator():
                 if self.isSign() and expected & self.SIGN:
                     if self.isNegativeSign():
-                        self.tokenprio = 2
+                        self.tokenprio = 5
                         self.tokenindex = '-'
                         noperators += 1
                         self.addfunc(tokenstack, operstack, TOP1)
@@ -753,15 +753,15 @@ class Parser:
 
     def isOperator(self):
         ops = (
-            ('+', 0, '+'),
-            ('-', 0, '-'),
-            ('*', 1, '*'),
-            ('\u2219', 1, '*'), # bullet operator
-            ('\u2022', 1, '*'), # black small circle
-            ('/', 2, '/'),
-            ('%', 2, '%'),
-            ('^', 3, '^'),
-            ('||', 0, '||'),
+            ('+', 2, '+'),
+            ('-', 2, '-'),
+            ('*', 3, '*'),
+            ('\u2219', 3, '*'), # bullet operator
+            ('\u2022', 3, '*'), # black small circle
+            ('/', 4, '/'),
+            ('%', 4, '%'),
+            ('^', 6, '^'),
+            ('||', 1, '||'),
             ('==', 1, '=='),
             ('!=', 1, '!='),
             ('<=', 1, '<='),
@@ -833,7 +833,7 @@ class Parser:
             str += c
         if len(str) > 0 and str in self.ops1:
             self.tokenindex = str
-            self.tokenprio = 5
+            self.tokenprio = 7
             self.pos += len(str)
             return True
         return False
@@ -848,7 +848,7 @@ class Parser:
             str += c
         if len(str) > 0 and (str in self.ops2):
             self.tokenindex = str
-            self.tokenprio = 5
+            self.tokenprio = 7
             self.pos += len(str)
             return True
         return False
