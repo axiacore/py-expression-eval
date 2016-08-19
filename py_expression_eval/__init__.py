@@ -756,8 +756,8 @@ class Parser:
             ('+', 2, '+'),
             ('-', 2, '-'),
             ('*', 3, '*'),
-            ('\u2219', 3, '*'), # bullet operator
-            ('\u2022', 3, '*'), # black small circle
+            (u'\u2219', 3, '*'), # bullet operator
+            (u'\u2022', 3, '*'), # black small circle
             ('/', 4, '/'),
             ('%', 4, '%'),
             ('^', 6, '^'),
