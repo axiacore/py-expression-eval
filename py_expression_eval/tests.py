@@ -55,6 +55,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("(a+b)!=c").evaluate({'a': 1, 'b': 2, 'c': 3}), False)
         self.assertEqual(parser.parse("(a^2-b^2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
         self.assertEqual(parser.parse("(a^2-b^2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
+        self.assertEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x':1, 'y':1}), 0.5)
 
         #functions
         self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
