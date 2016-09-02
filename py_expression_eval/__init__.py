@@ -10,6 +10,7 @@
 # You are free to use and modify this code in anyway you find useful. Please leave this comment in the code
 # to acknowledge its original source. If you feel like it, I enjoy hearing about projects that use my code,
 # but don't feel like you have to let me know or ask permission.
+from __future__ import division
 
 import math
 import random
