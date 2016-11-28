@@ -182,7 +182,7 @@ class Expression():
                 n1 = nstack.pop()
                 f = item.index_
                 if f == '-':
-                    nstack.append('(' + f + n1 + ')')
+                    nstack.append('(%s%s)'%(f, n1))
                 else:
                     nstack.append(f + '(' + n1 + ')')
             elif type_ == TFUNCALL:
