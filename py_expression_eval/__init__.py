@@ -110,8 +110,7 @@ class Expression():
         values = values or {}
         nstack = []
         L = len(self.tokens)
-        for i in range(0, L):
-            item = self.tokens[i]
+        for item in self.tokens:
             type_ = item.type_
             if type_ == TNUMBER:
                 nstack.append(item.number_)
@@ -138,7 +137,7 @@ class Expression():
                     if type(n1) is list:
                         nstack.append(f(*n1))
                     else:
-                        nstack.append(call(f, n1))
+                        nstack.append(f(n1))
                 else:
                     raise Exception(f + ' is not a function')
             else:

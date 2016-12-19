@@ -16,8 +16,6 @@ import unittest
 from py_expression_eval import Parser
 
 
-def testFunction(a,b):
-    return 2*a+3*b
 class ParserTestCase(unittest.TestCase):
     def setUp(self):
         self.parser = Parser()
@@ -61,9 +59,6 @@ class ParserTestCase(unittest.TestCase):
         #functions
         self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
-
-        #external function
-        self.assertEqual(parser.parse('testFunction(x , y)').evaluate({"x":2,"y":3,"testFunction":testFunction}),13)
 
 
         # test substitute
@@ -128,6 +123,47 @@ class ParserTestCase(unittest.TestCase):
     def test_evaluating_consts(self):
         self.assertEqual(self.parser.evaluate("Engage1", variables={"Engage1": 2}), 2)
         self.assertEqual(self.parser.evaluate("Engage1 + 1", variables={"Engage1": 1}), 2)
+
+    def test_custom_functions(self):
+        parser = Parser()
+
+        def testFunction0():
+            return 13
+        def testFunction1(a):
+            return 2*a+9
+        def testFunction2(a,b):
+            return 2*a+3*b
+
+        # zero argument functions don't currently work
+        # self.assertEqual(parser
+        #     .parse('testFunction()')
+        #     .evaluate({"testFunction":testFunction0}),13)
+        self.assertEqual(parser
+            .parse('testFunction(x)')
+            .evaluate({"x":2,"testFunction":testFunction1}),13)
+        self.assertEqual(parser
+            .parse('testFunction(x , y)')
+            .evaluate({"x":2,"y":3,"testFunction":testFunction2}),13)
+
+        # Add some "built-in" functions
+        def mean(*xs):
+            return sum(xs) / len(xs)
+        parser.functions['mean'] = mean
+
+        def counter(initial):
+            class nonlocals:
+                x = initial
+            def count(increment):
+                nonlocals.x += increment
+                return nonlocals.x
+            return count
+        parser.functions['count'] = counter(0)
+
+        self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
+        self.assertEqual(parser.parse("mean(xs)").symbols(), ["mean", "xs"])
+        self.assertEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
+        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
+        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
 
 if __name__ == '__main__':
