@@ -195,13 +195,18 @@ class Expression():
             raise Exception('invalid Expression (parity)')
         return nstack[0]
 
-    def variables(self):
+    def symbols(self):
         vars = []
         for i in range(0, len(self.tokens)):
             item = self.tokens[i]
             if item.type_ == TVAR and not item.index_ in vars:
                 vars.append(item.index_)
         return vars
+
+    def variables(self):
+        return [
+            sym for sym in self.symbols()
+            if sym not in self.functions]
 
 
 class Parser:

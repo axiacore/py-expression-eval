@@ -25,7 +25,8 @@ class ParserTestCase(unittest.TestCase):
     def test_parser(self):
         parser = Parser()
         #parser and variables
-        self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
+        self.assertEqual(parser.parse('pow(x,y)').variables(), ['x','y'])
+        self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow','x','y'])
 
         #evaluate
         self.assertEqual(parser.parse('1').evaluate({}), 1)
