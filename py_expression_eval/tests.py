@@ -79,6 +79,7 @@ class ParserTestCase(unittest.TestCase):
         # test toString with string constant
         expr = parser.parse("'a'=='b'")
         self.assertIn("'a'=='b'",expr.toString())
+        self.assertIn("'a'=='b'", "%s" % expr)
         expr = parser.parse("concat('a\n','\n','\rb')=='a\n\n\rb'")
         self.assertEqual(expr.evaluate({}),True)
 

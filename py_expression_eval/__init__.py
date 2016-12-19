@@ -195,6 +195,9 @@ class Expression():
             raise Exception('invalid Expression (parity)')
         return nstack[0]
 
+    def __str__(self):
+        return self.toString()
+
     def symbols(self):
         vars = []
         for i in range(0, len(self.tokens)):
