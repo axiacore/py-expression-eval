@@ -80,6 +80,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertIn("'a'=='b'",expr.toString())
         expr = parser.parse("concat('a\n','\n','\rb')=='a\n\n\rb'")
         self.assertEqual(expr.evaluate({}),True)
+        expr = parser.parse("a==''")
+        self.assertEqual(expr.evaluate({'a':''}),True)
 
         #test toString with an external function
         expr=parser.parse("myExtFn(a,b,c,1.51,'ok')")
