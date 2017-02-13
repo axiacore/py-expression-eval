@@ -28,7 +28,7 @@ class Token():
         self.type_ = type_
         self.index_ = index_ or 0
         self.prio_ = prio_ or 0
-        self.number_ = number_ or 0
+        self.number_ = number_ if number_ != None else 0
 
     def toString(self):
         if self.type_ == TNUMBER:
@@ -727,7 +727,7 @@ class Parser:
             self.pos += 1
             while self.pos < len(self.expression):
                 code = self.expression[self.pos]
-                if code != '\'' or str[-1] == '\\':
+                if code != '\'' or (str != '' and str[-1] == '\\'):
                     str += self.expression[self.pos]
                     self.pos += 1
                 else:
