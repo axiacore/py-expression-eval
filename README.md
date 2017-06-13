@@ -82,9 +82,9 @@ Out: '(-1.0+x)'
 
 Expression | Example | Output
 ---------- | ------- | ------ 
-+          | ``parser.parse('2 + 2').evaluate({})`` | 4.0
--          | ``parser.parse('3 - 1').evaluate({})`` | 2.0
-*          | ``parser.parse('2 * 3').evaluate({})`` | 6.0
+`+`          | ``parser.parse('2 + 2').evaluate({})`` | 4.0
+`-`          | ``parser.parse('3 - 1').evaluate({})`` | 2.0
+`*`          | ``parser.parse('2 * 3').evaluate({})`` | 6.0
 /          | ``parser.parse('5 / 2').evaluate({})`` | 2.5
 %          | ``parser.parse('5 % 2').evaluate({})`` | 1.0
 ^          | ``parser.parse('5 ^ 2').evaluate({})`` | 25.0
