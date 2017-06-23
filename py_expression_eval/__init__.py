@@ -423,6 +423,9 @@ class Parser:
     def pyt(self, a, b):
         return math.sqrt(a * a + b * b)
 
+    def ifFunction(self,a,b,c):
+        return b if a else c
+
     def append(self, a, b):
         if type(a) != list:
             return [a, b]
@@ -485,7 +488,8 @@ class Parser:
             'pyt': self.pyt,
             'pow': math.pow,
             'atan2': math.atan2,
-            'concat':self.concat
+            'concat':self.concat,
+            'if': self.ifFunction
         }
 
         self.consts = {
