@@ -27,6 +27,9 @@ class ParserTestCase(unittest.TestCase):
         #parser and variables
         self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
 
+        #checking if '"a b"' could be a variable (using it in sql)
+        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),4)
+
         #evaluate
         self.assertEqual(parser.parse('1').evaluate({}), 1)
         self.assertEqual(parser.parse('a').evaluate({'a': 2}), 2)
@@ -60,9 +63,12 @@ class ParserTestCase(unittest.TestCase):
         #functions
         self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
+        self.assertEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
+        self.assertEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
 
         #external function
         self.assertEqual(parser.parse('testFunction(x , y)').evaluate({"x":2,"y":3,"testFunction":testFunction}),13)
+
 
 
         # test substitute
