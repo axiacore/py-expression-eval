@@ -16,8 +16,6 @@ import unittest
 from py_expression_eval import Parser
 
 
-def testFunction(a,b):
-    return 2*a+3*b
 class ParserTestCase(unittest.TestCase):
     def setUp(self):
         self.parser = Parser()
@@ -25,7 +23,8 @@ class ParserTestCase(unittest.TestCase):
     def test_parser(self):
         parser = Parser()
         #parser and variables
-        self.assertEqual(parser.parse('lulu(x,y)').variables(), ['lulu','x','y'])
+        self.assertEqual(parser.parse('pow(x,y)').variables(), ['x','y'])
+        self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow','x','y'])
 
         #checking if '"a b"' could be a variable (using it in sql)
         self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),4)
@@ -66,9 +65,6 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
         self.assertEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
 
-        #external function
-        self.assertEqual(parser.parse('testFunction(x , y)').evaluate({"x":2,"y":3,"testFunction":testFunction}),13)
-
 
 
         # test substitute
@@ -84,6 +80,7 @@ class ParserTestCase(unittest.TestCase):
         # test toString with string constant
         expr = parser.parse("'a'=='b'")
         self.assertIn("'a'=='b'",expr.toString())
+        self.assertIn("'a'=='b'", "%s" % expr)
         expr = parser.parse("concat('a\n','\n','\rb')=='a\n\n\rb'")
         self.assertEqual(expr.evaluate({}),True)
         expr = parser.parse("a==''")
@@ -134,6 +131,47 @@ class ParserTestCase(unittest.TestCase):
     def test_evaluating_consts(self):
         self.assertEqual(self.parser.evaluate("Engage1", variables={"Engage1": 2}), 2)
         self.assertEqual(self.parser.evaluate("Engage1 + 1", variables={"Engage1": 1}), 2)
+
+    def test_custom_functions(self):
+        parser = Parser()
+
+        def testFunction0():
+            return 13
+        def testFunction1(a):
+            return 2*a+9
+        def testFunction2(a,b):
+            return 2*a+3*b
+
+        # zero argument functions don't currently work
+        # self.assertEqual(parser
+        #     .parse('testFunction()')
+        #     .evaluate({"testFunction":testFunction0}),13)
+        self.assertEqual(parser
+            .parse('testFunction(x)')
+            .evaluate({"x":2,"testFunction":testFunction1}),13)
+        self.assertEqual(parser
+            .parse('testFunction(x , y)')
+            .evaluate({"x":2,"y":3,"testFunction":testFunction2}),13)
+
+        # Add some "built-in" functions
+        def mean(*xs):
+            return sum(xs) / len(xs)
+        parser.functions['mean'] = mean
+
+        def counter(initial):
+            class nonlocals:
+                x = initial
+            def count(increment):
+                nonlocals.x += increment
+                return nonlocals.x
+            return count
+        parser.functions['count'] = counter(0)
+
+        self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
+        self.assertEqual(parser.parse("mean(xs)").symbols(), ["mean", "xs"])
+        self.assertEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
+        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
+        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
 
 if __name__ == '__main__':
