@@ -30,6 +30,7 @@ All the classes and methods of ``py-expression-eval`` were written as similar as
 ``Parser`` is the main class of the library that contains the methods to parse, evaluate and simplify mathematical expressions. In order to use the library you need to create an instance of this class:
 
 ```python
+> from py_expression_eval import Parser
 > parser = Parser()
 ```
 
