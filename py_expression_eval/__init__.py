@@ -78,7 +78,7 @@ class Expression():
                     newexpression.append(nstack.pop(0))
                 newexpression.append(item)
         while nstack:
-            newexpression.add(nstack.pop(0))
+            newexpression.append(nstack.pop(0))
 
         return Expression(newexpression, self.ops1, self.ops2, self.functions)
 
