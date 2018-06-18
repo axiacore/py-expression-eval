@@ -173,6 +173,18 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
         self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
+    def test_decimals(self):
+        parser = Parser()
+
+        self.assertEqual(parser.parse(".1").evaluate({}), parser.parse("0.1").evaluate({}))
+        self.assertEqual(parser.parse(".1*.2").evaluate({}), parser.parse("0.1*0.2").evaluate({}))
+        self.assertEqual(parser.parse(".5^3").evaluate({}), float(0.125))
+        self.assertEqual(parser.parse("16^.5").evaluate({}), 4)
+        self.assertEqual(parser.parse("8300*.8").evaluate({}), 6640)
+
+        with self.assertRaises(ValueError):
+            parser.parse("..5").evaluate({})
+
 
 if __name__ == '__main__':
     unittest.main()
