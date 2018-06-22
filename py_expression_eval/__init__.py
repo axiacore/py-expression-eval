@@ -181,9 +181,9 @@ class Expression():
                 n1 = nstack.pop()
                 f = item.index_
                 if f == '-':
-                    nstack.append('(' + f + n1 + ')')
+                    nstack.append('(' + f + str(n1) + ')')
                 else:
-                    nstack.append(f + '(' + n1 + ')')
+                    nstack.append(f + '(' + str(n1) + ')')
             elif type_ == TFUNCALL:
                 n1 = nstack.pop()
                 f = nstack.pop()
