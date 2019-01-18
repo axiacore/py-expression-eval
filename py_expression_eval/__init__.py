@@ -526,7 +526,10 @@ class Parser:
                     str = '0'
                 str += code
                 self.pos += 1
-                self.tokennumber = float(str)
+                try:
+                    self.tokennumber = int(str)
+                except ValueError:
+                    self.tokennumber = float(str)
                 r = True
             else:
                 break

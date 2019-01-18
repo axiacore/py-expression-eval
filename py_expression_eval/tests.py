@@ -20,6 +20,10 @@ class ParserTestCase(unittest.TestCase):
     def setUp(self):
         self.parser = Parser()
 
+    def assertExactEqual(self, a, b):
+        self.assertEqual(type(a), type(b))
+        self.assertEqual(a, b)
+
     def test_parser(self):
         parser = Parser()
         #parser and variables
@@ -30,26 +34,26 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),4)
 
         #evaluate
-        self.assertEqual(parser.parse('1').evaluate({}), 1)
-        self.assertEqual(parser.parse('a').evaluate({'a': 2}), 2)
-        self.assertEqual(parser.parse('2 * 3').evaluate({}), 6)
-        self.assertEqual(parser.parse(u'2 \u2219 3').evaluate({}), 6)
-        self.assertEqual(parser.parse(u'2 \u2022 3').evaluate({}), 6)
-        self.assertEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8)
+        self.assertExactEqual(parser.parse('1').evaluate({}), 1)
+        self.assertExactEqual(parser.parse('a').evaluate({'a': 2}), 2)
+        self.assertExactEqual(parser.parse('2 * 3').evaluate({}), 6)
+        self.assertExactEqual(parser.parse(u'2 \u2219 3').evaluate({}), 6)
+        self.assertExactEqual(parser.parse(u'2 \u2022 3').evaluate({}), 6)
+        self.assertExactEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8.0)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 3}), False)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 2}), True)
         self.assertEqual(parser.parse('x <= 3').evaluate({'x': 3}), True)
         self.assertEqual(parser.parse('x <= 3').evaluate({'x': 4}), False)
         self.assertEqual(parser.parse('x > 3').evaluate({'x': 4}), True)
         self.assertEqual(parser.parse('x >= 3').evaluate({'x': 3}), True)
-        self.assertEqual(parser.parse('2 * x + 1').evaluate({'x': 3}), 7)
-        self.assertEqual(parser.parse('2 + 3 * x').evaluate({'x': 4}), 14)
-        self.assertEqual(parser.parse('(2 + 3) * x').evaluate({'x': 4}), 20)
-        self.assertEqual(parser.parse('2-3^x').evaluate({'x': 4}), -79)
-        self.assertEqual(parser.parse('-2-3^x').evaluate({'x': 4}), -83)
-        self.assertEqual(parser.parse('-3^x').evaluate({'x': 4}), -81)
-        self.assertEqual(parser.parse('(-3)^x').evaluate({'x': 4}), 81)
-        self.assertEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
+        self.assertExactEqual(parser.parse('2 * x + 1').evaluate({'x': 3}), 7)
+        self.assertExactEqual(parser.parse('2 + 3 * x').evaluate({'x': 4}), 14)
+        self.assertExactEqual(parser.parse('(2 + 3) * x').evaluate({'x': 4}), 20)
+        self.assertExactEqual(parser.parse('2-3^x').evaluate({'x': 4}), -79.0)
+        self.assertExactEqual(parser.parse('-2-3^x').evaluate({'x': 4}), -83.0)
+        self.assertExactEqual(parser.parse('-3^x').evaluate({'x': 4}), -81.0)
+        self.assertExactEqual(parser.parse('(-3)^x').evaluate({'x': 4}), 81.0)
+        self.assertExactEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
         self.assertEqual(parser.parse("x||y").evaluate({'x': 'hello ', 'y': 'world'}), 'hello world')
         self.assertEqual(parser.parse("'x'||'y'").evaluate({}), 'xy')
         self.assertEqual(parser.parse("'x'=='x'").evaluate({}), True)
@@ -57,25 +61,25 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("(a+b)!=c").evaluate({'a': 1, 'b': 2, 'c': 3}), False)
         self.assertEqual(parser.parse("(a^2-b^2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
         self.assertEqual(parser.parse("(a^2-b^2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
-        self.assertEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x':1, 'y':1}), 0.5)
+        self.assertExactEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x':1, 'y':1}), 0.5)
 
         #functions
-        self.assertEqual(parser.parse('pyt(2 , 0)').evaluate({}),2)
+        self.assertExactEqual(parser.parse('pyt(2 , 0)').evaluate({}), 2.0)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
-        self.assertEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
-        self.assertEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
+        self.assertExactEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
+        self.assertExactEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
 
 
 
         # test substitute
         expr = parser.parse('2 * x + 1')
         expr2 = expr.substitute('x', '4 * x')  # ((2*(4*x))+1)
-        self.assertEqual(expr2.evaluate({'x': 3}), 25)
+        self.assertExactEqual(expr2.evaluate({'x': 3}), 25)
 
         # test simplify
         expr = parser.parse('x * (y * atan(1))').simplify({'y': 4})
         self.assertIn('x*3.141592', expr.toString())
-        self.assertEqual(expr.evaluate({'x': 2}), 6.283185307179586)
+        self.assertExactEqual(expr.evaluate({'x': 2}), 6.283185307179586)
 
         # test toString with string constant
         expr = parser.parse("'a'=='b'")
@@ -129,8 +133,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(self.parser.parse('E_').variables(), ["E_"])
 
     def test_evaluating_consts(self):
-        self.assertEqual(self.parser.evaluate("Engage1", variables={"Engage1": 2}), 2)
-        self.assertEqual(self.parser.evaluate("Engage1 + 1", variables={"Engage1": 1}), 2)
+        self.assertExactEqual(self.parser.evaluate("Engage1", variables={"Engage1": 2}), 2)
+        self.assertExactEqual(self.parser.evaluate("Engage1 + 1", variables={"Engage1": 1}), 2)
 
     def test_custom_functions(self):
         parser = Parser()
@@ -146,10 +150,10 @@ class ParserTestCase(unittest.TestCase):
         # self.assertEqual(parser
         #     .parse('testFunction()')
         #     .evaluate({"testFunction":testFunction0}),13)
-        self.assertEqual(parser
+        self.assertExactEqual(parser
             .parse('testFunction(x)')
             .evaluate({"x":2,"testFunction":testFunction1}),13)
-        self.assertEqual(parser
+        self.assertExactEqual(parser
             .parse('testFunction(x , y)')
             .evaluate({"x":2,"y":3,"testFunction":testFunction2}),13)
 
@@ -170,17 +174,17 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
         self.assertEqual(parser.parse("mean(xs)").symbols(), ["mean", "xs"])
         self.assertEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
-        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
-        self.assertEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
+        self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
+        self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
     def test_decimals(self):
         parser = Parser()
 
-        self.assertEqual(parser.parse(".1").evaluate({}), parser.parse("0.1").evaluate({}))
-        self.assertEqual(parser.parse(".1*.2").evaluate({}), parser.parse("0.1*0.2").evaluate({}))
-        self.assertEqual(parser.parse(".5^3").evaluate({}), float(0.125))
-        self.assertEqual(parser.parse("16^.5").evaluate({}), 4)
-        self.assertEqual(parser.parse("8300*.8").evaluate({}), 6640)
+        self.assertExactEqual(parser.parse(".1").evaluate({}), parser.parse("0.1").evaluate({}))
+        self.assertExactEqual(parser.parse(".1*.2").evaluate({}), parser.parse("0.1*0.2").evaluate({}))
+        self.assertExactEqual(parser.parse(".5^3").evaluate({}), float(0.125))
+        self.assertExactEqual(parser.parse("16^.5").evaluate({}), 4.0)
+        self.assertExactEqual(parser.parse("8300*.8").evaluate({}), 6640.0)
 
         with self.assertRaises(ValueError):
             parser.parse("..5").evaluate({})
