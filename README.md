@@ -47,8 +47,12 @@ Out: <py_expression_eval.Expression instance at 0x7f40cc4e5ef0>
 
 ```python
 > parser.parse('2 * 3').evaluate({})
+Out: 6
+> parser.parse('2 * 3.0').evaluate({})
 Out: 6.0
 > parser.parse('2 * x').evaluate({'x': 7})
+Out: 14
+> parser.parse('2 * x').evaluate({'x': 7.0})
 Out: 14.0
 ```
 
@@ -56,7 +60,7 @@ Out: 14.0
 
 ```python
 > parser.parse('2 * x').substitute('x', '3 + x').toString()
-Out: '(2.0*(3.0+x))'
+Out: '(2*(3+x))'
 ```
 
 ``variables()`` returns a list of the variables for the expression:
@@ -70,9 +74,9 @@ Out: ['x', 'y']
 
 ```python
 > parser.parse('2 * 3 * x + y').simplify({}).toString()
-Out: '((6.0*x)+y)'
+Out: '((6*x)+y)'
 > parser.parse('2 * 3 * x + y').simplify({'x': -1}).toString()
-Out: '(-6.0+y)'
+Out: '(-6+y)'
 > parser.parse('cos(PI) + x').simplify({}).toString()
 Out: '(-1.0+x)'
 ```
@@ -83,11 +87,11 @@ Out: '(-1.0+x)'
 
 | Expression | Example | Output
 | ---------- | ------- | ------ 
-| +          | ``parser.parse('2 + 2').evaluate({})`` | 4.0
-| -          | ``parser.parse('3 - 1').evaluate({})`` | 2.0
-| `*`          | ``parser.parse('2 * 3').evaluate({})`` | 6.0
+| +          | ``parser.parse('2 + 2').evaluate({})`` | 4
+| -          | ``parser.parse('3 - 1').evaluate({})`` | 2
+| `*`          | ``parser.parse('2 * 3').evaluate({})`` | 6
 | /          | ``parser.parse('5 / 2').evaluate({})`` | 2.5
-| %          | ``parser.parse('5 % 2').evaluate({})`` | 1.0
+| %          | ``parser.parse('5 % 2').evaluate({})`` | 1
 | ^          | ``parser.parse('5 ^ 2').evaluate({})`` | 25.0
 | PI         | ``parser.parse('PI').evaluate({})`` | 3.141592653589793
 | E          | ``parser.parse('E').evaluate({})`` | 2.718281828459045
@@ -98,7 +102,7 @@ Out: '(-1.0+x)'
 | acos(x)     | ``parser.parse('acos(-1)').evaluate({})`` | 3.141592653589793
 | atan(x)    | ``parser.parse('atan(PI)').evaluate({})`` | 1.2626272556789118
 | log(x)    | ``parser.parse('log(1)').evaluate({})`` | 0.0
-| abs(x)    | ``parser.parse('abs(-1)').evaluate({})`` | 1.0
+| abs(x)    | ``parser.parse('abs(-1)').evaluate({})`` | 1
 | ceil(x)    | ``parser.parse('ceil(2.7)').evaluate({})`` | 3.0
 | floor(x)    | ``parser.parse('floor(2.7)').evaluate({})`` | 2.0
 | round(x)    | ``parser.parse('round(2.7)').evaluate({})`` | 3.0
@@ -111,16 +115,16 @@ from py_expression_eval import Parser
 
 parser = Parser()
 parser.parse('2 * 3').evaluate({})  # 6
-parser.parse('2 ^ x').evaluate({'x': 3})  # 8
+parser.parse('2 ^ x').evaluate({'x': 3})  # 8.0
 parser.parse('2 * x + 1').evaluate({'x': 3})  # 7
 parser.parse('2 + 3 * x').evaluate({'x': 4})  # 14
 parser.parse('(2 + 3) * x').evaluate({'x': 4}) # 20
-parser.parse('2-3^x').evaluate({'x': 4})  # -79
-parser.parse('-2-3^x').evaluate({'x': 4})  # -83
-parser.parse('-3^x').evaluate({'x': 4})  # -81
-parser.parse('(-3)^x').evaluate({'x': 4})  # 81
+parser.parse('2-3^x').evaluate({'x': 4})  # -79.0
+parser.parse('-2-3^x').evaluate({'x': 4})  # -83.0
+parser.parse('-3^x').evaluate({'x': 4})  # -81.0
+parser.parse('(-3)^x').evaluate({'x': 4})  # 81.0
 parser.parse('2*x + y').evaluate({'x': 4, 'y': 1})  # 9
-parser.parse('round(log(2.7))').evaluate({}) # 1
+parser.parse('round(log(2.7))').evaluate({}) # 1.0
 
 # substitute
 expr = parser.parse('2 * x + 1')
@@ -145,13 +149,13 @@ Available operations
 from py_expression_eval import Parser
 
 parser = Parser()
-parser.parse('2 + 3').evaluate({})  # 5.0
-parser.parse('2 - 3').evaluate({})  # -1.0
-parser.parse('2 * 3').evaluate({})  # 6.0
+parser.parse('2 + 3').evaluate({})  # 5
+parser.parse('2 - 3').evaluate({})  # -1
+parser.parse('2 * 3').evaluate({})  # 6
 parser.parse('2 / 3').evaluate({})  # 0.6666666666666666
-parser.parse('2 % 3').evaluate({})  # 2.0
-parser.parse('-2').evaluate({})  # -2.0
-parser.parse('abs(-2)').evaluate({}) # 2.0
+parser.parse('2 % 3').evaluate({})  # 2
+parser.parse('-2').evaluate({})  # -2
+parser.parse('abs(-2)').evaluate({}) # 2
 
 parser.parse('ceil(1.4)').evaluate({})  # 2.0
 parser.parse('floor(1.4)').evaluate({})  # 1.0
