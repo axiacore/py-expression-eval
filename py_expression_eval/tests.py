@@ -173,7 +173,7 @@ class ParserTestCase(unittest.TestCase):
 
         self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
         self.assertEqual(parser.parse("mean(xs)").symbols(), ["mean", "xs"])
-        self.assertExactEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
+        self.assertEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
