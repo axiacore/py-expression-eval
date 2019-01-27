@@ -312,7 +312,6 @@ class Parser:
             'acos': math.acos,
             'atan': math.atan,
             'sqrt': math.sqrt,
-            'log': math.log,
             'abs': abs,
             'ceil': math.ceil,
             'floor': math.floor,
@@ -343,6 +342,7 @@ class Parser:
         self.functions = {
             'random': random,
             'fac': self.fac,
+            'log': math.log,
             'min': min,
             'max': max,
             'pyt': self.pyt,
