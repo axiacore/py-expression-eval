@@ -69,7 +69,9 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
         self.assertExactEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
 
-
+        #log with base or natural log
+        self.assertExactEqual(parser.parse('log(16,2)').evaluate({}), 4.0)
+        self.assertExactEqual(parser.parse('log(E^100)').evaluate({}), 100.0)
 
         # test substitute
         expr = parser.parse('2 * x + 1')

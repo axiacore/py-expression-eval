@@ -102,6 +102,7 @@ Out: '(-1.0+x)'
 | acos(x)     | ``parser.parse('acos(-1)').evaluate({})`` | 3.141592653589793
 | atan(x)    | ``parser.parse('atan(PI)').evaluate({})`` | 1.2626272556789118
 | log(x)    | ``parser.parse('log(1)').evaluate({})`` | 0.0
+| log(x, base) | ``parser.parse('log(16, 2)').evaluate({})`` | 4.0
 | abs(x)    | ``parser.parse('abs(-1)').evaluate({})`` | 1
 | ceil(x)    | ``parser.parse('ceil(2.7)').evaluate({})`` | 3.0
 | floor(x)    | ``parser.parse('floor(2.7)').evaluate({})`` | 2.0
