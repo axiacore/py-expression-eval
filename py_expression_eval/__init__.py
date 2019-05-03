@@ -14,6 +14,7 @@ from __future__ import division
 
 import math
 import random
+import re
 
 TNUMBER = 0
 TOP1 = 1
@@ -519,6 +520,19 @@ class Parser:
 
     def isNumber(self):
         r = False
+
+        if self.expression[self.pos] == 'E':
+            return False
+
+        # number in scientific notation
+        pattern = r'([-+]?([0-9]*\.?[0-9]*)[eE][-+]?[0-9]+).*'
+        match = re.match(pattern, self.expression[self.pos: ])
+        if match:
+            self.pos += len(match.group(1))
+            self.tokennumber = float(match.group(1))
+            return True
+
+        # number in decimal
         str = ''
         while self.pos < len(self.expression):
             code = self.expression[self.pos]
