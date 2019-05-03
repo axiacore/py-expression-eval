@@ -182,7 +182,7 @@ class Expression():
                 n1 = nstack.pop()
                 f = item.index_
                 if f == '-':
-                    nstack.append('(' + f + n1 + ')')
+                    nstack.append('(' + f + str(n1) + ')')
                 else:
                     nstack.append(f + '(' + n1 + ')')
             elif type_ == TFUNCALL:
@@ -654,8 +654,8 @@ class Parser:
             ('>=', 1, '>='),
             ('<', 1, '<'),
             ('>', 1, '>'),
-            ('and', 0, 'and'),
-            ('or', 0, 'or'),
+            ('and ', 0, 'and'),
+            ('or ', 0, 'or'),
         )
         for token, priority, index in ops:
             if self.expression.startswith(token, self.pos):
