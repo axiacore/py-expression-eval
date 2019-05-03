@@ -327,6 +327,7 @@ class Parser:
             '/': self.div,
             '%': self.mod,
             '^': math.pow,
+            '**': math.pow,
             ',': self.append,
             '||': self.concat,
             "==": self.equal,
@@ -625,6 +626,7 @@ class Parser:
         ops = (
             ('+', 2, '+'),
             ('-', 2, '-'),
+            ('**', 6, '**'),
             ('*', 3, '*'),
             (u'\u2219', 3, '*'), # bullet operator
             (u'\u2022', 3, '*'), # black small circle
