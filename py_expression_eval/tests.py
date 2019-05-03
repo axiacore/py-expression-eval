@@ -41,6 +41,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse(u'2 \u2022 3').evaluate({}), 6)
         self.assertExactEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8.0)
         self.assertExactEqual(parser.parse('2 ** x').evaluate({'x': 3}), 8.0)
+        self.assertExactEqual(parser.parse('-1.E2 ** x + 2.0E2').evaluate({'x': 1}), 100.0)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 3}), False)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 2}), True)
         self.assertEqual(parser.parse('x <= 3').evaluate({'x': 3}), True)
@@ -197,6 +198,9 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse(".5**3").evaluate({}), float(0.125))
         self.assertExactEqual(parser.parse("16**.5").evaluate({}), 4.0)
         self.assertExactEqual(parser.parse("8300*.8").evaluate({}), 6640.0)
+        self.assertExactEqual(parser.parse("1E3*2.0").evaluate({}), 2000.0)
+        self.assertExactEqual(parser.parse("-1e3*2.0").evaluate({}), -2000.0)
+        self.assertExactEqual(parser.parse("-1E3*2.E2").evaluate({}), -200000.0)
 
         with self.assertRaises(ValueError):
             parser.parse("..5").evaluate({})
