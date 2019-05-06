@@ -40,6 +40,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse(u'2 \u2219 3').evaluate({}), 6)
         self.assertExactEqual(parser.parse(u'2 \u2022 3').evaluate({}), 6)
         self.assertExactEqual(parser.parse('2 ^ x').evaluate({'x': 3}), 8.0)
+        self.assertExactEqual(parser.parse('2 ** x').evaluate({'x': 3}), 8.0)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 3}), False)
         self.assertEqual(parser.parse('x < 3').evaluate({'x': 2}), True)
         self.assertEqual(parser.parse('x <= 3').evaluate({'x': 3}), True)
@@ -53,6 +54,10 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse('-2-3^x').evaluate({'x': 4}), -83.0)
         self.assertExactEqual(parser.parse('-3^x').evaluate({'x': 4}), -81.0)
         self.assertExactEqual(parser.parse('(-3)^x').evaluate({'x': 4}), 81.0)
+        self.assertExactEqual(parser.parse('2-3**x').evaluate({'x': 4}), -79.0)
+        self.assertExactEqual(parser.parse('-2-3**x').evaluate({'x': 4}), -83.0)
+        self.assertExactEqual(parser.parse('-3**x').evaluate({'x': 4}), -81.0)
+        self.assertExactEqual(parser.parse('(-3)**x').evaluate({'x': 4}), 81.0)
         self.assertExactEqual(parser.parse('2*x + y').evaluate({'x': 4, 'y': 1}), 9)
         self.assertEqual(parser.parse("x||y").evaluate({'x': 'hello ', 'y': 'world'}), 'hello world')
         self.assertEqual(parser.parse("'x'||'y'").evaluate({}), 'xy')
@@ -61,6 +66,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("(a+b)!=c").evaluate({'a': 1, 'b': 2, 'c': 3}), False)
         self.assertEqual(parser.parse("(a^2-b^2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
         self.assertEqual(parser.parse("(a^2-b^2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
+        self.assertEqual(parser.parse("(a**2-b**2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
+        self.assertEqual(parser.parse("(a**2-b**2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
         self.assertExactEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x':1, 'y':1}), 0.5)
 
         #functions
@@ -72,6 +79,7 @@ class ParserTestCase(unittest.TestCase):
         #log with base or natural log
         self.assertExactEqual(parser.parse('log(16,2)').evaluate({}), 4.0)
         self.assertExactEqual(parser.parse('log(E^100)').evaluate({}), 100.0)
+        self.assertExactEqual(parser.parse('log(E**100)').evaluate({}), 100.0)
 
         # test substitute
         expr = parser.parse('2 * x + 1')
@@ -186,6 +194,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.parse(".1*.2").evaluate({}), parser.parse("0.1*0.2").evaluate({}))
         self.assertExactEqual(parser.parse(".5^3").evaluate({}), float(0.125))
         self.assertExactEqual(parser.parse("16^.5").evaluate({}), 4.0)
+        self.assertExactEqual(parser.parse(".5**3").evaluate({}), float(0.125))
+        self.assertExactEqual(parser.parse("16**.5").evaluate({}), 4.0)
         self.assertExactEqual(parser.parse("8300*.8").evaluate({}), 6640.0)
 
         with self.assertRaises(ValueError):
