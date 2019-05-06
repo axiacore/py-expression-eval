@@ -14,6 +14,7 @@ from __future__ import division
 
 import math
 import random
+import re
 
 TNUMBER = 0
 TOP1 = 1
@@ -181,7 +182,7 @@ class Expression():
                 n1 = nstack.pop()
                 f = item.index_
                 if f == '-':
-                    nstack.append('(' + f + n1 + ')')
+                    nstack.append('(' + f + str(n1) + ')')
                 else:
                     nstack.append(f + '(' + n1 + ')')
             elif type_ == TFUNCALL:
@@ -519,6 +520,19 @@ class Parser:
 
     def isNumber(self):
         r = False
+
+        if self.expression[self.pos] == 'E':
+            return False
+
+        # number in scientific notation
+        pattern = r'([-+]?([0-9]*\.?[0-9]*)[eE][-+]?[0-9]+).*'
+        match = re.match(pattern, self.expression[self.pos: ])
+        if match:
+            self.pos += len(match.group(1))
+            self.tokennumber = float(match.group(1))
+            return True
+
+        # number in decimal
         str = ''
         while self.pos < len(self.expression):
             code = self.expression[self.pos]
@@ -640,8 +654,8 @@ class Parser:
             ('>=', 1, '>='),
             ('<', 1, '<'),
             ('>', 1, '>'),
-            ('and', 0, 'and'),
-            ('or', 0, 'or'),
+            ('and ', 0, 'and'),
+            ('or ', 0, 'or'),
         )
         for token, priority, index in ops:
             if self.expression.startswith(token, self.pos):
