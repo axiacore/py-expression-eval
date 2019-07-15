@@ -607,11 +607,12 @@ class Parser:
         r = False
         str = ''
         startpos = self.pos
-        if self.pos < len(self.expression) and self.expression[self.pos] == "'":
+        if self.pos < len(self.expression) and self.expression[self.pos] in ("'", "\""):
+            quote_type = self.expression[self.pos]
             self.pos += 1
             while self.pos < len(self.expression):
                 code = self.expression[self.pos]
-                if code != '\'' or (str != '' and str[-1] == '\\'):
+                if code != quote_type or (str != '' and str[-1] == '\\'):
                     str += self.expression[self.pos]
                     self.pos += 1
                 else:

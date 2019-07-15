@@ -189,6 +189,20 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
+    def test_custom_functions_with_inline_strings(self):
+        parser = Parser()
+        expr = parser.parse("func(1, \"func(2, 4)\")")
+        self.assertEqual(expr.variables(), ['func'])
+
+    def test_custom_functions_substitute_strings(self):
+        def func(var, str):
+            if str == "custom text":
+                return 1
+            return 0
+        parser = Parser()
+        expr = parser.parse("func(1, \"custom text\")")
+        self.assertEqual(expr.evaluate({"func": func}), 1)
+    
     def test_decimals(self):
         parser = Parser()
 
