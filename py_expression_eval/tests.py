@@ -30,8 +30,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('pow(x,y)').variables(), ['x','y'])
         self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow','x','y'])
 
-        #checking if '"a b"' could be a variable (using it in sql)
-        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),4)
+        # but '"a b"' can *not* be used as a variable
+        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),"a ba b")
 
         #evaluate
         self.assertExactEqual(parser.parse('1').evaluate({}), 1)
