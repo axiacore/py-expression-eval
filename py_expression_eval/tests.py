@@ -220,6 +220,11 @@ class ParserTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             parser.parse("..5").evaluate({})
 
+    def test_to_string(self):
+        parser = Parser()
+
+        self.assertEqual(parser.parse("-12 * a + -2").toString(), '(((-12.0)*a)+(-2.0))')
+
 
 if __name__ == '__main__':
     unittest.main()
