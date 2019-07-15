@@ -30,8 +30,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse('pow(x,y)').variables(), ['x','y'])
         self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow','x','y'])
 
-        #checking if '"a b"' could be a variable (using it in sql)
-        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),4)
+        # but '"a b"' can *not* be used as a variable
+        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),"a ba b")
 
         #evaluate
         self.assertExactEqual(parser.parse('1').evaluate({}), 1)
@@ -189,6 +189,20 @@ class ParserTestCase(unittest.TestCase):
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
         self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
 
+    def test_custom_functions_with_inline_strings(self):
+        parser = Parser()
+        expr = parser.parse("func(1, \"func(2, 4)\")")
+        self.assertEqual(expr.variables(), ['func'])
+
+    def test_custom_functions_substitute_strings(self):
+        def func(var, str):
+            if str == "custom text":
+                return 1
+            return 0
+        parser = Parser()
+        expr = parser.parse("func(1, \"custom text\")")
+        self.assertEqual(expr.evaluate({"func": func}), 1)
+    
     def test_decimals(self):
         parser = Parser()
 
