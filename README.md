@@ -185,3 +185,16 @@ parser.parse('cos(PI)').evaluate({})  # -1.0
 
 parser.parse('x||y').evaluate({'x': 2, 'y': 3})  # '23'
 ```
+
+## Upload package to PyPi
+
+Generating distribution archives
+
+    python3 setup.py sdist bdist_wheel
+
+Upload distribution
+
+    ls -a dist/
+    twine upload dist/py_expression_eval-0.3.9*
+
+More details: https://packaging.python.org/tutorials/packaging-projects/
