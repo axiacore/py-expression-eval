@@ -197,4 +197,6 @@ Upload distribution
     ls -a dist/
     twine upload dist/py_expression_eval-0.3.9*
 
+Check on: https://pypi.org/project/py-expression-eval/0.3.9/
+
 More details: https://packaging.python.org/tutorials/packaging-projects/
