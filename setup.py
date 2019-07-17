@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='py_expression_eval',
-    version='0.3.8',
+    version='0.3.9',
     description='Python Mathematical Expression Evaluator',
     long_description=long_description,
     long_description_content_type="text/markdown",
