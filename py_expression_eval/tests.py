@@ -223,7 +223,7 @@ class ParserTestCase(unittest.TestCase):
     def test_to_string(self):
         parser = Parser()
 
-        self.assertEqual(parser.parse("-12 * a + -2").toString(), '(((-12.0)*a)+(-2.0))')
+        self.assertEqual(parser.parse("-12 * a + -2").toString(), '(((-12)*a)+(-2))')
 
 
 if __name__ == '__main__':
