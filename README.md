@@ -19,6 +19,10 @@ but don't feel like you have to let me know or ask permission.
 ## Installation
 
     pip install py_expression_eval
+
+## Tests
+
+    python setup.py test
     
 ## Documentation
 
