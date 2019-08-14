@@ -227,6 +227,34 @@ class Parser:
     CALL         = 128
     NULLARY_CALL = 256
 
+    ops = [('+', 2, '+'),
+           ('-', 2, '-'),
+           ('**', 6, '**'),
+           ('*', 3, '*'),
+           (u'\u2219', 3, '*'), # bullet operator
+           (u'\u2022', 3, '*'), # black small circle
+           ('/', 4, '/'),
+           ('%', 4, '%'),
+           ('^', 6, '^'),
+           ('||', 1, '||'),
+           ('==', 1, '=='),
+           ('!=', 1, '!='),
+           ('<=', 1, '<='),
+           ('>=', 1, '>='),
+           ('<', 1, '<'),
+           ('>', 1, '>'),
+           ('and ', 0, 'and'),
+           ('or ', 0, 'or')]
+
+
+    def register_operation(self, token, priority, index, func):
+
+        if token not in self.ops1 or token not in self.ops1:
+
+            self.ops.append((token, priority, index))
+            self.ops2[token] = func
+
+
     def add(self, a, b):
         return a + b
 
@@ -303,6 +331,7 @@ class Parser:
         return a
 
     def __init__(self):
+
         self.success = False
         self.errormsg = ''
         self.expression = ''
@@ -648,27 +677,8 @@ class Parser:
         return False
 
     def isOperator(self):
-        ops = (
-            ('+', 2, '+'),
-            ('-', 2, '-'),
-            ('**', 6, '**'),
-            ('*', 3, '*'),
-            (u'\u2219', 3, '*'), # bullet operator
-            (u'\u2022', 3, '*'), # black small circle
-            ('/', 4, '/'),
-            ('%', 4, '%'),
-            ('^', 6, '^'),
-            ('||', 1, '||'),
-            ('==', 1, '=='),
-            ('!=', 1, '!='),
-            ('<=', 1, '<='),
-            ('>=', 1, '>='),
-            ('<', 1, '<'),
-            ('>', 1, '>'),
-            ('and ', 0, 'and'),
-            ('or ', 0, 'or'),
-        )
-        for token, priority, index in ops:
+
+        for token, priority, index in self.ops:
             if self.expression.startswith(token, self.pos):
                 self.tokenprio = priority
                 self.tokenindex = index
