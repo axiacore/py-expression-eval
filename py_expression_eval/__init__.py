@@ -276,7 +276,7 @@ class Parser:
         return -a
 
     def random(self, a):
-        return math.random() * (a or 1)
+        return random.random() * (a or 1)
 
     def fac(self, a):  # a!
         return math.factorial(a)
@@ -352,7 +352,7 @@ class Parser:
         }
 
         self.functions = {
-            'random': random,
+            'random': self.random,
             'fac': self.fac,
             'log': math.log,
             'min': min,

@@ -77,6 +77,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
         self.assertExactEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
         self.assertExactEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
+        self.assertExactEqual(parser.parse('if(random(1)>1,1,0)').evaluate({}),0)
 
         #log with base or natural log
         self.assertExactEqual(parser.parse('log(16,2)').evaluate({}), 4.0)
