@@ -283,7 +283,25 @@ class Parser:
 
     def pyt(self, a, b):
         return math.sqrt(a * a + b * b)
-    
+
+    def sind(self, a):
+        return math.sin(math.radians(a))
+
+    def cosd(self, a):
+        return math.cos(math.radians(a))
+
+    def tand(self, a):
+        return math.tan(math.radians(a))
+
+    def asind(self, a):
+        return math.degrees(math.asin(a))
+
+    def acosd(self, a):
+        return math.degrees(math.acos(a))
+
+    def atand(self, a):
+        return math.degrees(math.atan(a))
+
     def roll(self, a, b):
         rolls = []
         roll = 0
@@ -321,6 +339,14 @@ class Parser:
             'asin': math.asin,
             'acos': math.acos,
             'atan': math.atan,
+
+            'sind': self.sind,
+            'cosd': self.cosd,
+            'tand': self.tand,
+            'asind': self.asind,
+            'acosd': self.acosd,
+            'atand': self.atand,
+
             'sqrt': math.sqrt,
             'abs': abs,
             'ceil': math.ceil,
