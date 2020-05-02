@@ -13,7 +13,8 @@
 
 import unittest
 
-from py_expression_eval import Parser
+# from py_expression_eval import Parser
+from pyEval import Parser
 
 
 class ParserTestCase(unittest.TestCase):
@@ -26,14 +27,14 @@ class ParserTestCase(unittest.TestCase):
 
     def test_parser(self):
         parser = Parser()
-        #parser and variables
-        self.assertEqual(parser.parse('pow(x,y)').variables(), ['x','y'])
-        self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow','x','y'])
+        # parser and variables
+        self.assertEqual(parser.parse('pow(x,y)').variables(), ['x', 'y'])
+        self.assertEqual(parser.parse('pow(x,y)').symbols(), ['pow', 'x', 'y'])
 
         # but '"a b"' can *not* be used as a variable
-        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"':2}),"a ba b")
+        self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"': 2}), "a ba b")
 
-        #evaluate
+        # evaluate
         self.assertExactEqual(parser.parse('1').evaluate({}), 1)
         self.assertExactEqual(parser.parse('a').evaluate({'a': 2}), 2)
         self.assertExactEqual(parser.parse('2 * 3').evaluate({}), 6)
@@ -69,17 +70,26 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("(a^2-b^2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
         self.assertEqual(parser.parse("(a**2-b**2)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), True)
         self.assertEqual(parser.parse("(a**2-b**2+1)==((a+b)*(a-b))").evaluate({'a': 4859, 'b': 13150}), False)
-        self.assertExactEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x':1, 'y':1}), 0.5)
+        self.assertExactEqual(parser.parse("x/((x+y))").simplify({}).evaluate({'x': 1, 'y': 1}), 0.5)
         self.assertExactEqual(parser.parse('origin+2.0').evaluate({'origin': 1.0}), 3.0)
 
-        #functions
-        self.assertExactEqual(parser.parse('pyt(2 , 0)').evaluate({}), 2.0)
-        self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}),'Hello world')
-        self.assertExactEqual(parser.parse('if(a>b,5,6)').evaluate({'a':8,'b':3}),5)
-        self.assertExactEqual(parser.parse('if(a,b,c)').evaluate({'a':None,'b':1,'c':3}),3)
-        self.assertExactEqual(parser.parse('if(random(1)>1,1,0)').evaluate({}),0)
+        # logical expressions
+        self.assertExactEqual(parser.parse('a and b').evaluate({'a': True, 'b': False}), False)
+        self.assertExactEqual(parser.parse('a and not b').evaluate({'a': True, 'b': False}), True)
+        self.assertExactEqual(parser.parse('a or b').evaluate({'a': True, 'b': False}), True)
+        self.assertExactEqual(parser.parse('a xor b').evaluate({'a': True, 'b': True}), False)
 
-        #log with base or natural log
+        # check precedents: AND should evaluate before OR
+        self.assertExactEqual(parser.parse('a or b and not a').evaluate({'a': True, 'b': False}), True)
+
+        # functions
+        self.assertExactEqual(parser.parse('pyt(2 , 0)').evaluate({}), 2.0)
+        self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}), 'Hello world')
+        self.assertExactEqual(parser.parse('if(a>b,5,6)').evaluate({'a': 8, 'b': 3}), 5)
+        self.assertExactEqual(parser.parse('if(a,b,c)').evaluate({'a': None, 'b': 1, 'c': 3}), 3)
+        self.assertExactEqual(parser.parse('if(random(1)>1,1,0)').evaluate({}), 0)
+
+        # log with base or natural log
         self.assertExactEqual(parser.parse('log(16,2)').evaluate({}), 4.0)
         self.assertExactEqual(parser.parse('log(E^100)').evaluate({}), 100.0)
         self.assertExactEqual(parser.parse('log(E**100)').evaluate({}), 100.0)
@@ -96,18 +106,16 @@ class ParserTestCase(unittest.TestCase):
 
         # test toString with string constant
         expr = parser.parse("'a'=='b'")
-        self.assertIn("'a'=='b'",expr.toString())
+        self.assertIn("'a'=='b'", expr.toString())
         self.assertIn("'a'=='b'", "%s" % expr)
         expr = parser.parse("concat('a\n','\n','\rb')=='a\n\n\rb'")
-        self.assertEqual(expr.evaluate({}),True)
+        self.assertEqual(expr.evaluate({}), True)
         expr = parser.parse("a==''")
-        self.assertEqual(expr.evaluate({'a':''}),True)
+        self.assertEqual(expr.evaluate({'a': ''}), True)
 
-        #test toString with an external function
-        expr=parser.parse("myExtFn(a,b,c,1.51,'ok')")
-        self.assertEqual(expr.substitute("a",'first').toString(),"myExtFn(first,b,c,1.51,'ok')")
-
-
+        # test toString with an external function
+        expr = parser.parse("myExtFn(a,b,c,1.51,'ok')")
+        self.assertEqual(expr.substitute("a", 'first').toString(), "myExtFn(first,b,c,1.51,'ok')")
 
         # test variables
         expr = parser.parse('x * (y * atan(1))')
@@ -154,34 +162,40 @@ class ParserTestCase(unittest.TestCase):
 
         def testFunction0():
             return 13
+
         def testFunction1(a):
-            return 2*a+9
-        def testFunction2(a,b):
-            return 2*a+3*b
+            return 2 * a + 9
+
+        def testFunction2(a, b):
+            return 2 * a + 3 * b
 
         # zero argument functions don't currently work
         # self.assertEqual(parser
         #     .parse('testFunction()')
         #     .evaluate({"testFunction":testFunction0}),13)
         self.assertExactEqual(parser
-            .parse('testFunction(x)')
-            .evaluate({"x":2,"testFunction":testFunction1}),13)
+                              .parse('testFunction(x)')
+                              .evaluate({"x": 2, "testFunction": testFunction1}), 13)
         self.assertExactEqual(parser
-            .parse('testFunction(x , y)')
-            .evaluate({"x":2,"y":3,"testFunction":testFunction2}),13)
+                              .parse('testFunction(x , y)')
+                              .evaluate({"x": 2, "y": 3, "testFunction": testFunction2}), 13)
 
         # Add some "built-in" functions
         def mean(*xs):
             return sum(xs) / len(xs)
+
         parser.functions['mean'] = mean
 
         def counter(initial):
             class nonlocals:
                 x = initial
+
             def count(increment):
                 nonlocals.x += increment
                 return nonlocals.x
+
             return count
+
         parser.functions['count'] = counter(0)
 
         self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
@@ -200,10 +214,11 @@ class ParserTestCase(unittest.TestCase):
             if str == "custom text":
                 return 1
             return 0
+
         parser = Parser()
         expr = parser.parse("func(1, \"custom text\")")
         self.assertEqual(expr.evaluate({"func": func}), 1)
-    
+
     def test_decimals(self):
         parser = Parser()
 
