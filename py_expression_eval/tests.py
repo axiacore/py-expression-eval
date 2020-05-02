@@ -14,7 +14,7 @@
 import unittest
 
 # from py_expression_eval import Parser
-from pyEval import Parser
+from py_expression_eval import Parser
 
 
 class ParserTestCase(unittest.TestCase):
