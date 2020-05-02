@@ -112,6 +112,10 @@ Out: '(-1.0+x)'
 | floor(x)    | ``parser.parse('floor(2.7)').evaluate({})`` | 2.0
 | round(x)    | ``parser.parse('round(2.7)').evaluate({})`` | 3.0
 | exp(x)    | ``parser.parse('exp(2)').evaluate({})`` | 7.38905609893065
+| and    | ``parser.parse('a and b').evaluate({'a':True, 'b':True})`` | True
+| or    | ``parser.parse('a or b').evaluate({'a':True, 'b':True})`` | True
+| xor    | ``parser.parse('a xor b').evaluate({'a':True, 'b':True})`` | False
+| not    | ``parser.parse('a and not b').evaluate({'a':True, 'b':True})`` | False
 
 ## Examples
 
