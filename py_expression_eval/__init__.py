@@ -272,8 +272,11 @@ class Parser:
     def orOperator (self, a, b ):
         return  ( a or  b )
 
-    def notOperator (self, a):
-        return ( not a )
+    def xorOperator (self, a, b ):
+        return  ( a ^ b )
+
+    def notOperator(self, a):
+        return not a
 
     def neg(self, a):
         return -a
@@ -356,6 +359,7 @@ class Parser:
             'floor': math.floor,
             'round': round,
             '-': self.neg,
+            'not': self.notOperator,
             'exp': math.exp,
         }
 
@@ -377,7 +381,7 @@ class Parser:
             "<=": self.lessThanEqual,
             "and": self.andOperator,
             "or": self.orOperator,
-            "not": self.notOperator,
+            "xor": self.xorOperator,
             "D": self.roll
         }
 
@@ -443,6 +447,13 @@ class Parser:
                         self.tokenindex = '-'
                         noperators += 1
                         self.addfunc(tokenstack, operstack, TOP1)
+                    expected = \
+                        self.PRIMARY | self.LPAREN | self.FUNCTION | self.SIGN
+                elif self.isLogicalNot() and expected & self.SIGN:
+                    self.tokenprio = 2
+                    self.tokenindex = 'not'
+                    noperators += 1
+                    self.addfunc(tokenstack, operstack, TOP1)
                     expected = \
                         self.PRIMARY | self.LPAREN | self.FUNCTION | self.SIGN
                 elif self.isComment():
@@ -679,23 +690,25 @@ class Parser:
 
     def isOperator(self):
         ops = (
-            ('+', 2, '+'),
-            ('-', 2, '-'),
-            ('**', 6, '**'),
-            ('*', 3, '*'),
-            (u'\u2219', 3, '*'), # bullet operator
-            (u'\u2022', 3, '*'), # black small circle
-            ('/', 4, '/'),
-            ('%', 4, '%'),
-            ('^', 6, '^'),
-            ('||', 1, '||'),
-            ('==', 1, '=='),
-            ('!=', 1, '!='),
-            ('<=', 1, '<='),
-            ('>=', 1, '>='),
-            ('<', 1, '<'),
-            ('>', 1, '>'),
-            ('and ', 0, 'and'),
+            ('**', 8, '**'),
+            ('^', 8, '^'),
+            ('%', 6, '%'),
+            ('/', 6, '/'),
+            (u'\u2219', 5, '*'), # bullet operator
+            (u'\u2022', 5, '*'), # black small circle
+            ('*', 5, '*'),
+            ('+', 4, '+'),
+            ('-', 4, '-'),
+            ('||', 3, '||'),
+            ('==', 3, '=='),
+            ('!=', 3, '!='),
+            ('<=', 3, '<='),
+            ('>=', 3, '>='),
+            ('<', 3, '<'),
+            ('>', 3, '>'),
+            ('not ', 2, 'not'),
+            ('and ', 1, 'and'),
+            ('xor ', 0, 'xor'),
             ('or ', 0, 'or'),
         )
         for token, priority, index in ops:
@@ -717,6 +730,10 @@ class Parser:
     def isNegativeSign(self):
         code = self.expression[self.pos - 1]
         return code == '-'
+
+    def isLogicalNot(self):
+        code = self.expression[self.pos - 4: self.pos]
+        return code == 'not '
 
     def isLeftParenth(self):
         code = self.expression[self.pos]
@@ -760,7 +777,7 @@ class Parser:
             str += c
         if len(str) > 0 and str in self.ops1:
             self.tokenindex = str
-            self.tokenprio = 7
+            self.tokenprio = 9
             self.pos += len(str)
             return True
         return False
@@ -775,7 +792,7 @@ class Parser:
             str += c
         if len(str) > 0 and (str in self.ops2):
             self.tokenindex = str
-            self.tokenprio = 7
+            self.tokenprio = 9
             self.pos += len(str)
             return True
         return False
@@ -793,7 +810,7 @@ class Parser:
             str += c
         if str:
             self.tokenindex = str
-            self.tokenprio = 4
+            self.tokenprio = 6
             self.pos += len(str)
             return True
         return False
