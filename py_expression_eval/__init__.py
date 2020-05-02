@@ -272,6 +272,9 @@ class Parser:
     def orOperator (self, a, b ):
         return  ( a or  b )
 
+    def notOperator (self, a):
+        return ( not a )
+
     def neg(self, a):
         return -a
 
@@ -374,6 +377,7 @@ class Parser:
             "<=": self.lessThanEqual,
             "and": self.andOperator,
             "or": self.orOperator,
+            "not": self.notOperator,
             "D": self.roll
         }
 
