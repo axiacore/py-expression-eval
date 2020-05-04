@@ -13,7 +13,6 @@
 
 import unittest
 
-# from py_expression_eval import Parser
 from py_expression_eval import Parser
 
 
