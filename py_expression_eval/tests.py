@@ -81,6 +81,13 @@ class ParserTestCase(unittest.TestCase):
         # check precedents: AND should evaluate before OR
         self.assertExactEqual(parser.parse('a or b and not a').evaluate({'a': True, 'b': False}), True)
 
+        # in operations
+        self.assertExactEqual(parser.parse('"ab" in ("ab", "cd")').evaluate({}), True)
+        self.assertExactEqual(parser.parse('"ee" in ("ab", "cd")').evaluate({}), False)
+        self.assertExactEqual(parser.parse('1 in (1, 2, 3)').evaluate({}), True)
+        self.assertExactEqual(parser.parse('"ab" in ("ab", "cd") and 1 in (1,2,3)').evaluate({}), True)
+        self.assertExactEqual(parser.parse('"word" in "word in sentence"').evaluate({}), True)
+
         # functions
         self.assertExactEqual(parser.parse('pyt(2 , 0)').evaluate({}), 2.0)
         self.assertEqual(parser.parse("concat('Hello',' ','world')").evaluate({}), 'Hello world')
@@ -200,8 +207,8 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(parser.parse("mean(xs)").variables(), ["xs"])
         self.assertEqual(parser.parse("mean(xs)").symbols(), ["mean", "xs"])
         self.assertEqual(parser.evaluate("mean(xs)", variables={"xs": [1, 2, 3]}), 2)
-        self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 5)
-        self.assertExactEqual(parser.evaluate("count(inc)", variables={"inc": 5}), 10)
+        self.assertExactEqual(parser.evaluate("count(num)", variables={"num": 5}), 5)
+        self.assertExactEqual(parser.evaluate("count(num)", variables={"num": 5}), 10)
 
     def test_custom_functions_with_inline_strings(self):
         parser = Parser()

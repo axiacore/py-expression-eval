@@ -275,6 +275,9 @@ class Parser:
     def xorOperator (self, a, b ):
         return  ( a ^ b )
 
+    def inOperator(self, a, b):
+        return a in b
+
     def notOperator(self, a):
         return not a
 
@@ -382,6 +385,7 @@ class Parser:
             "and": self.andOperator,
             "or": self.orOperator,
             "xor": self.xorOperator,
+            "in": self.inOperator,
             "D": self.roll
         }
 
@@ -552,7 +556,7 @@ class Parser:
 
     def error_parsing(self, column, msg):
         self.success = False
-        self.errormsg = 'parse error [column ' + str(column) + ']: ' + msg
+        self.errormsg = 'parse error [column ' + str(column) + ']: ' + msg + ', expression: ' + self.expression
         raise Exception(self.errormsg)
 
     def addfunc(self, tokenstack, operstack, type_):
@@ -706,6 +710,7 @@ class Parser:
             ('>=', 3, '>='),
             ('<', 3, '<'),
             ('>', 3, '>'),
+            ('in', 3, 'in'),
             ('not ', 2, 'not'),
             ('and ', 1, 'and'),
             ('xor ', 0, 'xor'),

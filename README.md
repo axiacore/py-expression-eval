@@ -89,33 +89,34 @@ Out: '(-1.0+x)'
 
 ### Available operators, constants and functions
 
-| Expression | Example | Output
-| ---------- | ------- | ------ 
-| +          | ``parser.parse('2 + 2').evaluate({})`` | 4
-| -          | ``parser.parse('3 - 1').evaluate({})`` | 2
-| `*`          | ``parser.parse('2 * 3').evaluate({})`` | 6
-| /          | ``parser.parse('5 / 2').evaluate({})`` | 2.5
-| %          | ``parser.parse('5 % 2').evaluate({})`` | 1
-| ^          | ``parser.parse('5 ^ 2').evaluate({})`` | 25.0
-| PI         | ``parser.parse('PI').evaluate({})`` | 3.141592653589793
-| E          | ``parser.parse('E').evaluate({})`` | 2.718281828459045
-| sin(x)     | ``parser.parse('sin(0)').evaluate({})`` | 0.0
-| cos(x)     | ``parser.parse('cos(PI)').evaluate({})`` | - 1.0
-| tan(x)     | ``parser.parse('tan(0)').evaluate({})`` | 0.0
+| Expression  | Example | Output
+| ----------  | ------- | ------
+| +           | ``parser.parse('2 + 2').evaluate({})`` | 4
+| -           | ``parser.parse('3 - 1').evaluate({})`` | 2
+| `*`         | ``parser.parse('2 * 3').evaluate({})`` | 6
+| /           | ``parser.parse('5 / 2').evaluate({})`` | 2.5
+| %           | ``parser.parse('5 % 2').evaluate({})`` | 1
+| ^           | ``parser.parse('5 ^ 2').evaluate({})`` | 25.0
+| PI          | ``parser.parse('PI').evaluate({})`` | 3.141592653589793
+| E           | ``parser.parse('E').evaluate({})`` | 2.718281828459045
+| sin(x)      | ``parser.parse('sin(0)').evaluate({})`` | 0.0
+| cos(x)      | ``parser.parse('cos(PI)').evaluate({})`` | - 1.0
+| tan(x)      |  ``parser.parse('tan(0)').evaluate({})`` | 0.0
 | asin(x)     | ``parser.parse('asin(0)').evaluate({})`` | 0.0
 | acos(x)     | ``parser.parse('acos(-1)').evaluate({})`` | 3.141592653589793
-| atan(x)    | ``parser.parse('atan(PI)').evaluate({})`` | 1.2626272556789118
-| log(x)    | ``parser.parse('log(1)').evaluate({})`` | 0.0
-| log(x, base) | ``parser.parse('log(16, 2)').evaluate({})`` | 4.0
-| abs(x)    | ``parser.parse('abs(-1)').evaluate({})`` | 1
-| ceil(x)    | ``parser.parse('ceil(2.7)').evaluate({})`` | 3.0
+| atan(x)     | ``parser.parse('atan(PI)').evaluate({})`` | 1.2626272556789118
+| log(x)      | ``parser.parse('log(1)').evaluate({})`` | 0.0
+| log(x, base)| ``parser.parse('log(16, 2)').evaluate({})`` | 4.0
+| abs(x)      | ``parser.parse('abs(-1)').evaluate({})`` | 1
+| ceil(x)     | ``parser.parse('ceil(2.7)').evaluate({})`` | 3.0
 | floor(x)    | ``parser.parse('floor(2.7)').evaluate({})`` | 2.0
 | round(x)    | ``parser.parse('round(2.7)').evaluate({})`` | 3.0
-| exp(x)    | ``parser.parse('exp(2)').evaluate({})`` | 7.38905609893065
-| and    | ``parser.parse('a and b').evaluate({'a':True, 'b':True})`` | True
-| or    | ``parser.parse('a or b').evaluate({'a':True, 'b':True})`` | True
-| xor    | ``parser.parse('a xor b').evaluate({'a':True, 'b':True})`` | False
-| not    | ``parser.parse('a and not b').evaluate({'a':True, 'b':True})`` | False
+| exp(x)      | ``parser.parse('exp(2)').evaluate({})`` | 7.38905609893065
+| and         | ``parser.parse('a and b').evaluate({'a':True, 'b':True})`` | True
+| or          | ``parser.parse('a or b').evaluate({'a':True, 'b':True})`` | True
+| xor         | ``parser.parse('a xor b').evaluate({'a':True, 'b':True})`` | False
+| not         | ``parser.parse('a and not b').evaluate({'a':True, 'b':True})`` | False
+| in          | ``parser.parse('1 in (1,2,3)').evaluate({})`` | True
 
 ## Examples
 
@@ -188,6 +189,9 @@ parser.parse('log(E)').evaluate({})  # 1.0
 parser.parse('cos(PI)').evaluate({})  # -1.0
 
 parser.parse('x||y').evaluate({'x': 2, 'y': 3})  # '23'
+
+parser.parse('num in (1,2,3)').evaluate({'num': 1})  # True
+parser.parse('"word" in "word in sentence"').evaluate({})  # True
 ```
 
 ## Upload package to PyPi
