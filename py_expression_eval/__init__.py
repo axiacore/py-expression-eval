@@ -329,7 +329,9 @@ class Parser:
         a.append(b)
         return a
 
-    def __init__(self):
+    def __init__(self, string_literal_quotes = ("'", "\"")):
+        self.string_literal_quotes = string_literal_quotes
+
         self.success = False
         self.errormsg = ''
         self.expression = ''
@@ -662,7 +664,7 @@ class Parser:
         r = False
         str = ''
         startpos = self.pos
-        if self.pos < len(self.expression) and self.expression[self.pos] in ("'", "\""):
+        if self.pos < len(self.expression) and self.expression[self.pos] in self.string_literal_quotes:
             quote_type = self.expression[self.pos]
             self.pos += 1
             while self.pos < len(self.expression):
