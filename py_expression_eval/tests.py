@@ -32,6 +32,9 @@ class ParserTestCase(unittest.TestCase):
 
         # but '"a b"' can *not* be used as a variable
         self.assertEqual(parser.parse('"a b"*2').evaluate({'"a b"': 2}), "a ba b")
+        # unless parse configured to allow double quoted variables (i.e. allow multi-word vars)
+        parser2 = Parser(string_literal_quotes=("'")) # only single, not double!
+        self.assertEqual(parser2.parse('"a b"*2').evaluate({'"a b"':2}),4)
 
         # evaluate
         self.assertExactEqual(parser.parse('1').evaluate({}), 1)
@@ -215,15 +218,31 @@ class ParserTestCase(unittest.TestCase):
         expr = parser.parse("func(1, \"func(2, 4)\")")
         self.assertEqual(expr.variables(), ['func'])
 
+        expr = parser.parse("func(1, 'func(2, 4)')")
+        self.assertEqual(expr.variables(), ['func'])
+
+        parser2 = Parser(string_literal_quotes=("'"))
+        expr = parser2.parse("func(1, \"func(2, 4)\")")
+        self.assertEqual(expr.variables(), ['func', "\"func(2, 4)\""])
+
+        expr = parser2.parse("func(1, 'func(2, 4)')")
+        self.assertEqual(expr.variables(), ['func'])
+
     def test_custom_functions_substitute_strings(self):
         def func(var, str):
             if str == "custom text":
                 return 1
+            if str == "foo":
+                return 2
             return 0
 
         parser = Parser()
         expr = parser.parse("func(1, \"custom text\")")
         self.assertEqual(expr.evaluate({"func": func}), 1)
+        
+        parser = Parser(string_literal_quotes=("'"))
+        expr = parser.parse("func(1, \"custom text\")")
+        self.assertEqual(expr.evaluate({"func": func, "\"custom text\"": "foo" }), 2)
 
     def test_decimals(self):
         parser = Parser()
