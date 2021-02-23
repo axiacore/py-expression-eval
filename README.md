@@ -149,7 +149,7 @@ expr.evaluate({'x': 2})  # 6.283185307179586
 # get variables
 expr = parser.parse('x * (y * atan(1))')
 expr.variables()  # ['x', 'y']
-expr.simplify({'y': 4}).variables()  # ['x']
+expr.simplify({'y': 4}).variables()  # ['x']
 ```
 
 Available operations
