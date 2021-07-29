@@ -239,6 +239,9 @@ class Parser:
     def div(self, a, b):
         return a / b
 
+    def pow(self, a, b):
+        return a ** b
+
     def mod(self, a, b):
         return a % b
 
@@ -374,8 +377,8 @@ class Parser:
             '*': self.mul,
             '/': self.div,
             '%': self.mod,
-            '^': math.pow,
-            '**': math.pow,
+            '^': self.pow,
+            '**': self.pow,
             ',': self.append,
             '||': self.concat,
             "==": self.equal,
