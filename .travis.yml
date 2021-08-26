@@ -9,7 +9,8 @@ python:
   - "3.9"
 
 script:
-  - python setup.py test
-  - pip install coveralls
+  - pip install codecov
+  - coverage run setup.py test
 
-after_success: coveralls
+after_success:
+  - codecov
