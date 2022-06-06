@@ -261,6 +261,16 @@ class ParserTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             parser.parse("..5").evaluate({})
 
+    def test_hexadecimal(self):
+        parser = Parser()
+
+        self.assertExactEqual(parser.parse("0x4000").evaluate({}), 0x4000)
+        self.assertExactEqual(parser.parse("0x4000").evaluate({}), 16384)
+        self.assertExactEqual(parser.parse("0x3FF").evaluate({}), 0x3FF)
+        self.assertExactEqual(parser.parse("0x1000 * 2").evaluate({}), 0x2000)
+        self.assertExactEqual(parser.parse("1000 * 0x2").evaluate({}), 2000)
+        self.assertExactEqual(parser.parse("0x3F + 0x10 * 0x20 + 32").evaluate({}), 0x25F)
+
     def test_to_string(self):
         parser = Parser()
 

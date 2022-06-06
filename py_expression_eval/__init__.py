@@ -592,6 +592,13 @@ class Parser:
             self.tokennumber = float(match.group(1))
             return True
 
+        hex_pattern = r'(0x[0-9a-fA-F]+)'
+        match = re.match(hex_pattern, self.expression[self.pos: ])
+        if match:
+            self.pos += len(match.group(1))
+            self.tokennumber = int(match.group(1), base=16)
+            return True
+
         # number in decimal
         str = ''
         while self.pos < len(self.expression):
